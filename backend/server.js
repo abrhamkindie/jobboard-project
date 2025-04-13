@@ -141,10 +141,12 @@ app.use('/jobs', jobRoutes);
 app.use('/job_alerts', jobAlertRoutes);
 app.use('/save', savedJobRoutes);
 
-app.use(express.static(path.join(__dirname, '../../my-react-project/dist')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../my-react-project/dist/index.html'));
-});
+// app.use(express.static(path.join(__dirname, '../../my-react-project/dist')));
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../../my-react-project/dist/index.html'));
+// });
+
+app.get('/test', (req, res) => res.send('Backend API working'));
 
 const port = process.env.PORT || 5000;
 server.listen(port, () => {

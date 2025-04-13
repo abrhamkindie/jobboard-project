@@ -1,27 +1,65 @@
-const mysql = require('mysql2');
+// const mysql = require('mysql2');
 
-const ConnectDB = (config) => {
-  if (!config || !config.host || !config.user || !config.database) {
-    console.warn('⚠️ Warning: Database Configuration is missing or incomplete.');
-    return null;
-  }
-    const db = mysql.createConnection({
+// const ConnectDB = (config) => {
+//   if (!config || !config.host || !config.user || !config.database) {
+//     console.warn('⚠️ Warning: Database Configuration is missing or incomplete.');
+//     return null;
+//   }
+//     const db = mysql.createConnection({
+//     host: config.host,
+//     user: config.user,
+//     password: config.password || null,  
+//     database: config.database,
+//     port: config.port || 3306,  
+//   });
+
+//   db.connect((err) => {
+//     if (err) {
+//       console.error('❌ Error connecting to MySQL:', err.stack);
+//       return null;
+//     }
+//     console.log('✅ Connected to MySQL database');
+//   });
+
+//   return db;
+// };
+
+// module.exports = { ConnectDB };
+
+
+
+
+
+
+const mysql = require('mysql2');
+const fs = require('fs');
+
+function ConnectDB(config) {
+  const connection = mysql.createConnection({
     host: config.host,
     user: config.user,
-    password: config.password || null,  
+    password: config.password,
     database: config.database,
-    port: config.port || 3306,  
+    port: config.port || 3306,
+
+
+    ssl: {
+      ca: fs.readFileSync('./ca.pem')
+    }
+
+
+
   });
 
-  db.connect((err) => {
+  connection.connect((err) => {
     if (err) {
-      console.error('❌ Error connecting to MySQL:', err.stack);
+      console.error('MySQL connection failed:', err);
       return null;
     }
-    console.log('✅ Connected to MySQL database');
+    console.log('Connected to MySQL');
   });
 
-  return db;
-};
+  return connection;
+}
 
 module.exports = { ConnectDB };
