@@ -8,9 +8,9 @@ const ConnectDB = (config) => {
     const db = mysql.createConnection({
     host: config.host,
     user: config.user,
-    password: config.password || null, // Use null if password is empty
+    password: config.password || null,  
     database: config.database,
-    port: config.port || 3306, // Default to 3306 if port is not provided
+    port: config.port || 3306,  
   });
 
   db.connect((err) => {
