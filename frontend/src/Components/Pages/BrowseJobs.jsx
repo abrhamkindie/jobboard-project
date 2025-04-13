@@ -4,12 +4,11 @@ import BASE_URL from "../API";
 import ApplicationModal from '../Modals/ApplicationModal';
 import Button from "../Button";
 import { useNavigate } from "react-router-dom"; 
-import { FaBookmark, FaDollarSign } from "react-icons/fa";
-import { FaCalendarCheck } from "react-icons/fa";
+import { FaBookmark, FaDollarSign ,FaCalendarCheck } from "react-icons/fa";
 import { MapPin } from "lucide-react"; 
 import JobCard from '../Cards/JobCard';
 import Modal from '../Modal';
-
+ 
 export const BrowseJobs = () => {
   const [JobList, setJobList] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
