@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jobController = require('../controllers/jobController');
 const { authenticate } = require('../middleware/authMiddleware');
-const { uploadSingle } = require('../middleware/uploadMiddleware');
+//const { uploadSingle } = require('../middleware/uploadMiddleware');
 
 const {uploadFile} =require('../middleware/uploadMiddleware');
 const {uploadResume} =require('../middleware/uploadMiddleware');  

@@ -721,7 +721,7 @@ exports.getJobApplicants = (req, res) => {
       }
       result.forEach((alert) => {
         if (alert.document_url) {
-          alert.document_url = `${process.env.BASE_URL || 'http://localhost:5000'}${alert.document_url}`;
+          alert.document_url = `${process.env.BASE_URL || Base_Url  }${alert.document_url}`;
         }
       });
       res.json(result);
@@ -1182,7 +1182,7 @@ exports.getEmployerInterviewAlerts = (req, res) => {
     }
     result.forEach((alert) => {
       if (alert.document_url) {
-        alert.document_url = `${process.env.BASE_URL || 'http://localhost:5000'}${alert.document_url}`;
+        alert.document_url = `${process.env.BASE_URL || Base_Url }${alert.document_url}`;
       }
     });
     res.json(result);
