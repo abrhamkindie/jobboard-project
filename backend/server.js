@@ -92,7 +92,7 @@ if (!db) {
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: '*',
+    origin: 'https://jobboard-frontend-8nt8.onrender.com',
     methods: ['GET', 'POST'],
   },
 });
@@ -127,7 +127,7 @@ io.on('connection', (socket) => {
 
 app.use('/uploads', express.static(path.join(__dirname, 'Uploads')));
 app.use(express.json());
-app.use(cors({ origin: '*', methods: ['GET', 'POST', 'PUT', 'DELETE'], allowedHeaders: ['Content-Type', 'Authorization'] }));
+app.use(cors({ origin: 'https://jobboard-frontend-8nt8.onrender.com', methods: ['GET', 'POST', 'PUT', 'DELETE'], allowedHeaders: ['Content-Type', 'Authorization'] }));
 
 app.use((req, res, next) => {
   req.db = db;
