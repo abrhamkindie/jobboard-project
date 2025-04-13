@@ -4,7 +4,7 @@
  import { io } from 'socket.io-client';
  import toast, { Toaster } from 'react-hot-toast';
  import { SideContents } from '../SideContents';
- import { FaBars, FaTimes, FaSearch, FaCalendarAlt, FaBookmark, FaFileAlt, FaBell, FaEnvelope, FaUserCog, FaQuestionCircle, FaChartLine, FaUser, FaCreditCard } from 'react-icons/fa';
+ import {FaBars, FaTimes, FaSearch, FaCalendarAlt, FaBookmark, FaFileAlt, FaBell, FaEnvelope, FaUserCog, FaQuestionCircle, FaChartLine, FaUser, FaCreditCard } from 'react-icons/fa';
  import BASE_URL from '../../API';
  
  export const SeekerSidebar = ({ onSetActiveContent, activeContent }) => {

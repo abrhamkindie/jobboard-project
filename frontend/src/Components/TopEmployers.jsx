@@ -1,4 +1,3 @@
-// Import logos
 import mastercard from '../images/mastercard-logo.jpg';
 import spotify from '../images/spotify-logo.png';
 import verizon from '../images/verizon.png';

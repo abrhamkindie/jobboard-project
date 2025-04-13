@@ -4,7 +4,7 @@ import BASE_URL from "../../API";
 import { useNavigate } from "react-router-dom";
  import ApplicationModal from "../../Modals/ApplicationModal";
 import Button from "../Button";  
-import {  FaBookmark} from "react-icons/fa";
+import {FaBookmark} from "react-icons/fa";
 
  
 

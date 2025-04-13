@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import BASE_URL from "../../API";
  import ApplicationModal from "../../Modals/ApplicationModal";
 import Button from "../Button";
-import {  FaBookmark} from "react-icons/fa";
+import {FaBookmark} from "react-icons/fa";
 
  export const SearchJobs = () => {
   const [jobList, setJobList] = useState([]);
