@@ -1,0 +1,9 @@
+# Node.js specific
+node_modules/
+npm-debug.log
+
+# Environment variables
+.env
+
+# Database backups
+*.sql

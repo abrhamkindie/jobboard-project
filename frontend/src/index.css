@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.nav-link{
+@apply  px-4 py-2 mx-2 text-base hover:text-lg border border-transparent hover:bg-transparent hover:text-orange-500   hover:rounded-md justify-center items-center duration-200 ease-in   
+}
+.active{
+    color: rgb(255, 119, 0);
+    
+ }
+ header ul li:not(.active):hover{
+    color: rgb(222, 193, 140);
+ }
+  /* Global styles for footer links */
+.footer-link {
+   color: #A0AEC0; /* Gray color */
+   transition: color 0.3s ease;
+ }
+ 
+ .footer-link:hover {
+   color: #63B3ED; /* Blue color */
+   text-decoration: underline;
+ }
+ 
+ /* Social icon styles */
+ .social-icon img {
+   width: 24px;
+   height: 24px;
+   transition: opacity 0.3s ease;
+ }
+ 
+ .social-icon:hover img {
+   opacity: 1;
+ }
+ 
+ @keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 30s linear infinite;
+  display: flex;
+  width: max-content; /* Ensure the container is wide enough to hold all logos */
+}
