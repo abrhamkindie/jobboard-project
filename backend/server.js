@@ -135,6 +135,8 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get('/test', (req, res) => res.send('Backend API working'));
+
 app.use('/profile', profileRoutes);
 app.use('/auth', authRoutes);
 app.use('/jobs', jobRoutes);
@@ -146,8 +148,7 @@ app.use('/save', savedJobRoutes);
 //   res.sendFile(path.join(__dirname, '../../my-react-project/dist/index.html'));
 // });
 
-app.get('/test', (req, res) => res.send('Backend API working'));
-
+ 
 const port = process.env.PORT || 5000;
 server.listen(port, () => {
   console.log(`🚀 Server running on http://localhost:${port}`);
