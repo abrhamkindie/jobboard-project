@@ -56,7 +56,7 @@
 
  
 const multer = require('multer');
-const { storage } = require('../cloudinary');  
+const { storage } = require('../utils/cloudinary');  
 
 // Configure Multer with Cloudinary storage
 const upload = multer({
