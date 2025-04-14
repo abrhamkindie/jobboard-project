@@ -3,43 +3,80 @@ const  Base_Url  = require('../config/Base_Url');
 
 const isDriveUrl = (url) => url && url.startsWith("https://drive.google.com/");
 // Handle job seeker registration 
- exports.handleJobSeeker = (req, res) => {
-  const { full_name, email, phone, password, job_title, skills, experience_level, location_preference } = req.body;
+//  exports.handleJobSeeker = (req, res) => {
+//   const { full_name, email, phone, password, job_title, skills, experience_level, location_preference } = req.body;
 
-  // Validate required fields
-  if (!full_name || !email || !phone || !password || !job_title || !skills || !experience_level || !location_preference) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
+//   // Validate required fields
+//   if (!full_name || !email || !phone || !password || !job_title || !skills || !experience_level || !location_preference) {
+//     return res.status(400).json({ error: 'Missing required fields' });
+//   }
 
-  // Validate file uploads
-  if (!req.files || !req.files.resume || !req.files.profile) {
-    return res.status(400).json({ error: 'Resume and profile photo are required' });
-  }
+//   // Validate file uploads
+//   if (!req.files || !req.files.resume || !req.files.profile) {
+//     return res.status(400).json({ error: 'Resume and profile photo are required' });
+//   }
 
-  // Construct file paths
+//   // Construct file paths
   
 
+//   const resume = req.files?.resume?.[0]?.path || null;
+//   const profile = req.files?.profile?.[0]?.path || null;
+
+ 
+//     // Prepare data for insertion
+//     const seekerData = {
+//       full_name,
+//       email,
+//       phone,
+//       password,
+//       job_title ,
+//       skills,
+//       experience_level,
+//       location_preference,
+//       profile,
+//       resume,
+//     };
+  
+
+//   // Insert into database
+//   insertIntoDatabase('seekers', seekerData, res,req.db);
+// };
+
+
+
+exports.handleJobSeeker = (req, res) => {
+  const {
+    full_name,
+    email,
+    phone,
+    password,
+    job_title,
+    skills,
+    experience_level,
+    location_preference,
+  } = req.body;
   const resume = req.files?.resume?.[0]?.path || null;
   const profile = req.files?.profile?.[0]?.path || null;
 
- 
-    // Prepare data for insertion
-    const seekerData = {
-      full_name,
-      email,
-      phone,
-      password,
-      job_title ,
-      skills,
-      experience_level,
-      location_preference,
-      profile,
-      resume,
-    };
-  
+  const seekerData = {
+    full_name,
+    email,
+    phone,
+    password,
+    job_title,
+    skills,
+    experience_level,
+    location_preference,
+    resume,
+    profile,
+  };
 
-  // Insert into database
-  insertIntoDatabase('seekers', seekerData, res,req.db);
+  console.log("Seeker data:", seekerData); // Debug
+  if (!full_name || !email || !phone || !password || !resume) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  require("../utils/helpers").insertIntoDatabase("seekers", seekerData, res, req.db);
 };
 
 

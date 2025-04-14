@@ -30,10 +30,6 @@ router.get('/interview-details', authenticate, jobController.getInterviewDetails
 router.get('/employer-interviews', authenticate, jobController.getEmployerInterviews);
 router.post('/markAllMessagesRead', authenticate, jobController.markAllMessagesRead);
 router.get('/unreadMessageCount', authenticate, jobController.getUnreadMessageCount);
-
-
-
-
 router.get('/employerInterviewAlerts', authenticate, jobController.getEmployerInterviewAlerts);
 router.get('/employerApplicationAlerts', authenticate, jobController.getEmployerApplicationAlerts);
 router.get('/employerInterviewCount', authenticate, jobController.getEmployerInterviewCount);
