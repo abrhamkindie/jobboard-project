@@ -1261,6 +1261,10 @@
 // };
 
 // Job seeker registration
+
+const {insertIntoDatabase}=require('../utils/helpers')
+const  Base_Url  = require('../config/Base_Url');
+
 exports.handleJobSeeker = (req, res) => {
   const { full_name, email, phone, password, job_title, skills, experience_level, location_preference } = req.body;
   if (!full_name || !email || !phone || !password || !job_title || !skills || !experience_level || !location_preference) {
