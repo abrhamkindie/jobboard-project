@@ -1,8 +1,3 @@
- 
-
-//const db = require('../managers/dbManager');
-
-// Save a job for a user
 exports.saveJob = (req, res) => {
   const db = req.db;
 

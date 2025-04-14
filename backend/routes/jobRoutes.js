@@ -1,11 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const jobController = require('../controllers/jobController');
-const { authenticate } = require('../middleware/authMiddleware');
- 
-const {uploadFile} =require('../middleware/uploadMiddleware');
-const {uploadResume} =require('../middleware/uploadMiddleware');  
- 
+const { authenticate } = require('../middleware/authMiddleware'); 
+const {uploadFile,uploadResume} =require('../middleware/uploadMiddleware');
+  
 router.post('/job_posts', authenticate, jobController.createJobPost);
 router.get('/job_lists', jobController.getJobListings);
 router.get('/employer_jobs', authenticate, jobController.getEmployerJobs);

@@ -57,45 +57,60 @@
 
 
  
-const multer = require('multer');
-const { storage } = require('../utils/cloudinary');  
+const multer = require("multer");
+const { storage, uploadToDrive } = require("../utils/storage");
 
-// Configure Multer with Cloudinary storage
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
   fileFilter: (req, file, cb) => {
-    const allowedFileTypes = ['image/jpeg', 'image/png', 'application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    const allowedFileTypes = [
+      "image/jpeg",
+      "image/png",
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/msword",
+    ];
     if (allowedFileTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Invalid file type. Only JPEG, PNG, PDF, and DOCX files are allowed.'), false);
+      cb(new Error("Invalid file type. Only JPEG, PNG, PDF, DOCX, and DOC allowed."), false);
     }
   },
 });
 
-const uploadFile = upload.single('file');
-const uploadResume = upload.single('resume');
-
-const uploadMiddleware = (req, res, next) => {
-  console.log('Multer Incoming Request - Body:', req.body);
-  console.log('Multer Incoming Request - Files:', req.files);
+const uploadMiddleware = async (req, res, next) => {
+  console.log("Multer Incoming Request - Body:", req.body);
   upload.fields([
-    { name: 'profile', maxCount: 1 },
-    { name: 'resume', maxCount: 1 },
-    { name: 'logo', maxCount: 1 },
-    { name: 'document', maxCount: 1 },
-  ])(req, res, (err) => {
+    { name: "profile", maxCount: 1 },
+    { name: "resume", maxCount: 1 },
+    { name: "logo", maxCount: 1 },
+    { name: "document", maxCount: 1 },
+  ])(req, res, async (err) => {
     if (err instanceof multer.MulterError) {
-      console.error('MulterError:', err);
-      return res.status(400).json({ error: 'File upload error', details: err.message });
+      console.error("MulterError:", err);
+      return res.status(400).json({ error: "File upload error", details: err.message });
     } else if (err) {
-      console.error('Upload Error:', err);
+      console.error("Upload Error:", err);
       return res.status(400).json({ error: err.message });
     }
-    next();
+    req.files = req.files || {};
+    try {
+      for (const field in req.files) {
+        const file = req.files[field][0];
+        req.files[field][0].path = await uploadToDrive(file, field);
+      }
+      console.log("Uploaded Files:", req.files);
+      next();
+    } catch (err) {
+      console.error("Drive Upload Error:", err);
+      res.status(500).json({ error: "Failed to upload to Drive", details: err.message });
+    }
   });
 };
+
+const uploadFile = upload.single("file");
+const uploadResume = upload.single("resume");
 
 module.exports = { uploadMiddleware, uploadFile, uploadResume };
 

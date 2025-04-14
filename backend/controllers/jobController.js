@@ -1,6 +1,7 @@
 const {insertIntoDatabase}=require('../utils/helpers')
 const  Base_Url  = require('../config/Base_Url');
 
+const isDriveUrl = (url) => url && url.startsWith("https://drive.google.com/");
 // Handle job seeker registration 
  exports.handleJobSeeker = (req, res) => {
   const { full_name, email, phone, password, job_title, skills, experience_level, location_preference } = req.body;
@@ -16,8 +17,10 @@ const  Base_Url  = require('../config/Base_Url');
   }
 
   // Construct file paths
-  const resumePath = `/uploads/${req.files.resume[0].filename}`;
-  const profilePath = `/uploads/${req.files.profile[0].filename}`;
+  
+
+  const resume = req.files?.resume?.[0]?.path || null;
+  const profile = req.files?.profile?.[0]?.path || null;
 
  
     // Prepare data for insertion
@@ -30,8 +33,8 @@ const  Base_Url  = require('../config/Base_Url');
       skills,
       experience_level,
       location_preference,
-      profile: profilePath,
-      resume: resumePath,
+      profile,
+      resume,
     };
   
 
@@ -50,7 +53,7 @@ const  Base_Url  = require('../config/Base_Url');
   }
 
   // Validate file upload (logo is optional)
-  const logoPath = req.files.logo ? `/uploads/${req.files.logo[0].filename}` : null;
+   const logo = req.files?.logo?.[0]?.path || null;
 
   // Prepare data for insertion
   const employerData = {
@@ -62,7 +65,7 @@ const  Base_Url  = require('../config/Base_Url');
     industry,
     company_size,
     job_description,
-    logo: logoPath,
+    logo
   };
 
   // Insert into database
@@ -157,12 +160,15 @@ exports.getJobListings = (req, res) => {
       return res.status(500).send('Error fetching job postings');
     }
  
-    result.forEach(job => {
-      if (job.company_logo) {
+
+    result.forEach((job) => {
+      if (job.company_logo && !isDriveUrl(job.company_logo)) {
         job.company_logo = `${Base_Url}${job.company_logo}`;
-      
       }
     });
+
+
+  
 
     // Get total count for pagination
     let countQuery = `SELECT COUNT(*) as total FROM job_postings jp JOIN employers e ON jp.employer_id = e.employer_id WHERE 1=1`;
@@ -217,12 +223,15 @@ exports.getEmployerJobs = (req, res) => {
     }
  
 
-     results.forEach(job => {
-      if (job.company_logo) {
+
+
+    results.forEach((job) => {
+      if (job.company_logo && !isDriveUrl(job.company_logo)) {
         job.company_logo = `${Base_Url}${job.company_logo}`;
       }
     });
 
+ 
      res.status(200).json(results);
   });
 };
@@ -314,14 +323,14 @@ exports.applyJob = (req, res) => {
     return res.status(400).json({ error: 'Resume file is required' });
   }
 
-  const resumePath = `/uploads/${req.file.filename}`;
+   const resume = req.file?.path || null;
 
   const applicationData = {
     job_id,
     jobSeeker_id,
     full_name: fullName,
     email,
-    resume: resumePath,
+    resume,
     cover_letter: coverLetter,
     linkedIn:linkedIn,
     phone:phone,
@@ -382,9 +391,7 @@ exports.updateApplicationStatus = (req, res) => {
 
 
 exports.scheduleInterview = (req, res) => {
-  // Debugging logs
-  console.log('Request Body:', req.body);
-  console.log('Request File:', req.file); // Changed from req.files
+ 
 
   const { Job_id, applicant_Id, interview_date, interview_type, interview_location, phone_number, zoom_link, dress_code } = req.body;
   const employer_id = parseInt(req.user.employer_id, 10);
@@ -423,7 +430,7 @@ exports.scheduleInterview = (req, res) => {
   }
 
   // Use req.file since we're using upload.single('file')
-  const documentUrl = req.file ? `/uploads/${req.file.filename}` : null;
+   const document_url = req.file?.path || null;
 
   const interviewData = {
     job_id: jobIdInt,
@@ -435,7 +442,7 @@ exports.scheduleInterview = (req, res) => {
     phone_number: interview_type === 'Phone Call' ? phone_number.trim() : null,
     zoom_link: interview_type === 'Video Call' ? zoom_link.trim() : null,
     dress_code: dress_code ? dress_code.trim() : null,
-    document_url: documentUrl,
+    document_url,
     status: 'Scheduled',
     created_at: new Date(),
   };
@@ -499,7 +506,7 @@ exports.scheduleInterview = (req, res) => {
                     phone_number: interviewData.phone_number,
                     zoom_link: interviewData.zoom_link,
                     dress_code: interviewData.dress_code || 'Not specified',
-                    document_url: documentUrl ? `${Base_Url}${documentUrl}` : null,
+                    document_url,
                     jobTitle: jobDetails.Job_title,
                     companyName: jobDetails.Company_name,
                     scheduledAt: interviewData.created_at.toISOString(),
@@ -511,7 +518,7 @@ exports.scheduleInterview = (req, res) => {
                     success: 'Interview scheduled successfully',
                     interview_id: interviewId,
                     interview_date: interviewDateObj.toISOString(),
-                    document_url: documentUrl,
+                    document_url,
                   });
                 }
               );
@@ -559,11 +566,16 @@ exports.getJobApplicants = (req, res) => {
     }
 
     // Append Base_Url to ApplicantProfile if it exists
-    result.forEach(job => {
-      if (job.ApplicantProfile) {
+      result.forEach((job) => {
+      if (job.ApplicantProfile && !isDriveUrl(job.ApplicantProfile)) {
         job.ApplicantProfile = `${Base_Url}${job.ApplicantProfile}`;
       }
+      if (job.applicantResume && !isDriveUrl(job.applicantResume)) {
+        job.applicantResume = `${Base_Url}${job.applicantResume}`;
+      }
     });
+
+
 
     res.status(200).json(result || []);
   });
@@ -649,11 +661,15 @@ exports.getJobApplicants = (req, res) => {
         return res.status(200).json([]);
       }
   
-      result.forEach(job => {
-           
-        if (job.companyLogo) job.companyLogo = `${Base_Url}${job.companyLogo}`;
-        if (job.applicantResume) job.applicantResume = `${Base_Url}${job.applicantResume}`;
+      result.forEach((job) => {
+        if (job.companyLogo && !isDriveUrl(job.companyLogo)) {
+          job.companyLogo = `${Base_Url}${job.companyLogo}`;
+        }
+        if (job.applicantResume && !isDriveUrl(job.applicantResume)) {
+          job.applicantResume = `${Base_Url}${job.applicantResume}`;
+        }
       });
+
       
       res.status(200).json(result);
     });
@@ -719,11 +735,14 @@ exports.getJobApplicants = (req, res) => {
         console.error('Interview alerts error:', err);
         return res.status(500).json({ error: 'Database error', details: err.message });
       }
+    
       result.forEach((alert) => {
-        if (alert.document_url) {
-          alert.document_url = `${process.env.BASE_URL || Base_Url  }${alert.document_url}`;
+        if (alert.document_url && !isDriveUrl(alert.document_url)) {
+          alert.document_url = `${Base_Url}${alert.document_url}`;
         }
       });
+
+
       res.json(result);
     });
   };
@@ -769,11 +788,16 @@ exports.getJobApplicants = (req, res) => {
         return res.status(500).json({ error: 'Database error', details: err.message });
       }
   
-      // Append Base_Url to companyLogo and document_url if they exist
       results.forEach((interview) => {
-        if (interview.companyLogo) interview.companyLogo = `${Base_Url}${interview.companyLogo}`;
-        if (interview.document_url) interview.document_url = `${Base_Url}${interview.document_url}`;
+        if (interview.companyLogo && !isDriveUrl(interview.companyLogo)) {
+          interview.companyLogo = `${Base_Url}${interview.companyLogo}`;
+        }
+        if (interview.document_url && !isDriveUrl(interview.document_url)) {
+          interview.document_url = `${Base_Url}${interview.document_url}`;
+        }
       });
+
+
   
       res.status(200).json(results);
     });
@@ -912,11 +936,21 @@ exports.getJobApplicants = (req, res) => {
         return res.status(500).json({ error: 'Database error', details: err.message });
       }
   
+
+
+
       results.forEach((interview) => {
-        if (interview.jobSeekerResume) interview.jobSeekerResume = `${Base_Url}${interview.jobSeekerResume}`;
-        if (interview.document_url) interview.document_url = `${Base_Url}${interview.document_url}`;
-        if (interview.jobSeekerProfilePicture) interview.jobSeekerProfilePicture = `${Base_Url}${interview.jobSeekerProfilePicture}`;
+        if (interview.jobSeekerResume && !isDriveUrl(interview.jobSeekerResume)) {
+          interview.jobSeekerResume = `${Base_Url}${interview.jobSeekerResume}`;
+        }
+        if (interview.document_url && !isDriveUrl(interview.document_url)) {
+          interview.document_url = `${Base_Url}${interview.document_url}`;
+        }
+        if (interview.jobSeekerProfilePicture && !isDriveUrl(interview.jobSeekerProfilePicture)) {
+          interview.jobSeekerProfilePicture = `${Base_Url}${interview.jobSeekerProfilePicture}`;
+        }
       });
+
   
       res.status(200).json(results);
     });
@@ -961,8 +995,12 @@ exports.getJobApplicants = (req, res) => {
       }
   
       const interview = results[0];
-      if (interview.jobseekerResume) interview.jobseekerResume = `${Base_Url}${interview.jobseekerResume}`;
-      if (interview.document_url) interview.document_url = `${Base_Url}${interview.document_url}`;
+      if (interview.jobseekerResume && !isDriveUrl(interview.jobseekerResume)) {
+        interview.jobseekerResume = `${Base_Url}${interview.jobseekerResume}`;
+      }
+      if (interview.document_url && !isDriveUrl(interview.document_url)) {
+        interview.document_url = `${Base_Url}${interview.document_url}`;
+      }
   
       res.status(200).json(interview);
     });
@@ -1180,11 +1218,15 @@ exports.getEmployerInterviewAlerts = (req, res) => {
       console.error('Interview alerts error:', err);
       return res.status(500).json({ error: 'Database error', details: err.message });
     }
+
     result.forEach((alert) => {
-      if (alert.document_url) {
-        alert.document_url = `${process.env.BASE_URL || Base_Url }${alert.document_url}`;
+      if (alert.document_url && !isDriveUrl(alert.document_url)) {
+        alert.document_url = `${Base_Url}${alert.document_url}`;
       }
-    });
+    })
+
+
+     
     res.json(result);
   });
 };
