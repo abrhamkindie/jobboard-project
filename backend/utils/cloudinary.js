@@ -11,8 +11,8 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: 'jobboard_uploads', // Optional: name your folder
-    allowed_formats: ['jpg', 'png', 'pdf', 'docx'], // adjust to your need
+    folder: 'jobboard_uploads',  
+    allowed_formats: ['jpg', 'png', 'pdf', 'docx'], 
   },
 });
 
