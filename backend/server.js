@@ -66,6 +66,7 @@ const http = require('http');
 const { LoadConfig } = require('./config/load_config');
 const { ConnectDB } = require('./managers/dbManager');
 const jwt = require('jsonwebtoken');
+const uploadRoutes = require('./routes/uploadRoutes');
 
 const authRoutes = require('./routes/authRoutes');
 const jobRoutes = require('./routes/jobRoutes');
@@ -125,7 +126,8 @@ io.on('connection', (socket) => {
   });
 });
 
-app.use('/uploads', express.static(path.join(__dirname, 'Uploads')));
+app.use('/upload', uploadRoutes);
+//app.use('/uploads', express.static(path.join(__dirname, 'Uploads')));
 app.use(express.json());
 app.use(cors({ origin: 'https://jobboard-frontend-8nt8.onrender.com', methods: ['GET', 'POST', 'PUT', 'DELETE'], allowedHeaders: ['Content-Type', 'Authorization'] }));
 
