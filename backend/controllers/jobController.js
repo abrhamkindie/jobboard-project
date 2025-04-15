@@ -1918,11 +1918,49 @@ exports.withdrawApplication = async (req, res) => {
   }
 };
 
-exports.getInterviewCount = async (req, res) => {
-  const jobSeeker_id = req.user.jobSeeker_id || req.user.id;
 
-  if (req.user.role !== 'seeker') {
-    return res.status(403).json({ error: 'Unauthorized: Seeker role required' });
+
+
+
+// exports.getInterviewCount = async (req, res) => {
+//   const jobSeeker_id = req.user.jobSeeker_id || req.user.id;
+
+//   console.log("jobseeker_id");
+
+
+//   if (req.user.role !== 'seeker') {
+//     return res.status(403).json({ error: 'Unauthorized: Seeker role required' });
+//   }
+
+//   try {
+//     const [result] = await req.db.query(
+//       "SELECT COUNT(*) AS interviewCount FROM interviews WHERE jobseeker_id = ? AND status = ?",
+//       [jobSeeker_id, "Scheduled"]
+//     );
+//     res.json({ interviewCount: result[0].interviewCount });
+//   } catch (err) {
+//     console.error("❌ getInterviewCount error:", err);
+//     res.status(500).json({ error: "Error fetching interview count", details: err.message });
+//   }
+
+
+// };
+
+exports.getInterviewCount = async (req, res) => {
+  console.log("req.user:", req.user); // Debug
+
+  if (!req.user) {
+    return res.status(401).json({ error: "Unauthorized: No user authenticated" });
+  }
+
+  const jobseeker_id = req.user.jobSeeker_id || req.user.id;
+
+  if (!jobseeker_id) {
+    return res.status(400).json({ error: "Invalid user: jobseeker_id not found" });
+  }
+
+  if (req.user.role !== "seeker") {
+    return res.status(403).json({ error: "Unauthorized: Seeker role required" });
   }
 
   try {
@@ -1935,14 +1973,17 @@ exports.getInterviewCount = async (req, res) => {
     console.error("❌ getInterviewCount error:", err);
     res.status(500).json({ error: "Error fetching interview count", details: err.message });
   }
-
-
 };
+
+
+
+
+
 
 exports.getInterviewAlerts = async (req, res) => {
   const jobSeeker_id = req.user.jobSeeker_id || req.user.id;
 
-  if (req.user.role !== 'seeker') {
+   if (req.user.role !== 'seeker') {
     return res.status(403).json({ error: 'Unauthorized: Seeker role required' });
   }
 
