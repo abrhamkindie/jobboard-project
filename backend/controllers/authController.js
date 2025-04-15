@@ -122,6 +122,7 @@
   
 const bcrypt = require('bcrypt');
 const { handleJobSeeker, handleEmployer } = require('./jobController');
+const jwt = require("jsonwebtoken");
 
 exports.signup = async (req, res) => {
   const { full_name, email, phone, password, role, terms } = req.body;
