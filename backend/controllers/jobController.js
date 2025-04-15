@@ -62,10 +62,10 @@ exports.handleJobSeeker = async (req, res) => {
   const resume = req.files?.resume?.[0]?.path || null;
   const profile = req.files?.profile?.[0]?.path || null;
 
-  if (!full_name || !email || !phone || !password || !resume) {
-    console.error('Missing required fields:', { full_name, email, phone, resume });
-    return res.status(400).json({ error: 'Full name, email, phone, password, and resume are required' });
-  }
+    if (!full_name || !email || !phone || !password || !resume) {
+      console.error('Missing required fields:', { full_name, email, phone, resume });
+      return res.status(400).json({ error: 'Full name, email, phone, password, and resume are required' });
+    }
 
   const seekerData = {
     full_name,
