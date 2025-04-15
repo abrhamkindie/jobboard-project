@@ -143,7 +143,7 @@ export const SignUp = () => {
     terms: false,
     job_title: '',
     skills: '',
-    experience_level: 'entry',
+    experience_level: 'Entry-level',
     location_preference: 'remote',
     resume: null,
     profile: null,
@@ -399,10 +399,11 @@ export const SignUp = () => {
                 required
                 className="w-full px-3 py-2 sm:px-4 sm:py-2.5 border border-teal-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm sm:text-base bg-white"
               >
-                <option value="entry">Entry-level</option>
-                <option value="mid">Mid-level</option>
-                <option value="senior">Senior</option>
-                <option value="executive">Executive</option>
+
+                 <option value="Entry-level">Entry-level</option>
+                <option value="Mid-level">Mid-level</option>
+                <option value="Senior">Senior</option>
+                <option value="Executive">Executive</option>
               </select>
             </div>
             <div>
