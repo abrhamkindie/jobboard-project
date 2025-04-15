@@ -3,112 +3,46 @@ const  Base_Url  = require('../config/Base_Url');
 
 const isDriveUrl = (url) => url && url.startsWith("https://drive.google.com/");
  
-// exports.handleJobSeeker = (req, res) => {
-//   const { full_name, email, phone, password, job_title, skills, experience_level, location_preference } = req.body;
+exports.handleJobSeeker = (req, res) => {
+  const { full_name, email, phone, password, job_title, skills, experience_level, location_preference } = req.body;
 
-//   // Validate required fields
-//   if (!full_name || !email || !phone || !password || !job_title || !skills || !experience_level || !location_preference) {
-//     return res.status(400).json({ error: 'Missing required fields' });
-//   }
+  // Validate required fields
+  if (!full_name || !email || !phone || !password || !job_title || !skills || !experience_level || !location_preference) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
 
-//   // Validate file uploads
-//   if (!req.files || !req.files.resume || !req.files.profile) {
-//     return res.status(400).json({ error: 'Resume and profile photo are required' });
-//   }
+  // Validate file uploads
+  if (!req.files || !req.files.resume || !req.files.profile) {
+    return res.status(400).json({ error: 'Resume and profile photo are required' });
+  }
 
-//   // Construct file paths
+  // Construct file paths
   
 
-//   const resume = req.files?.resume?.[0]?.path || null;
-//   const profile = req.files?.profile?.[0]?.path || null;
-
- 
-//     // Prepare data for insertion
-//     const seekerData = {
-//       full_name,
-//       email,
-//       phone,
-//       password,
-//       job_title ,
-//       skills,
-//       experience_level,
-//       location_preference,
-//       profile,
-//       resume,
-//     };
-  
-
-//   // Insert into database
-//   insertIntoDatabase('seekers', seekerData, res,req.db);
-// };
-
-
-
-// controllers/jobController.js
-const jwt = require('jsonwebtoken');
-
-exports.handleJobSeeker = async (req, res) => {
-  console.log('handleJobSeeker:', req.body, req.files);
-  const {
-    full_name,
-    email,
-    phone,
-    password,
-    job_title,
-    skills,
-    experience_level,
-    location_preference,
-  } = req.body;
   const resume = req.files?.resume?.[0]?.path || null;
   const profile = req.files?.profile?.[0]?.path || null;
 
-    if (!full_name || !email || !phone || !password ) {
-      console.error('Missing required fields:', { full_name, email, phone, resume });
-      return res.status(400).json({ error: 'Full name, email, phone, password  are required' });
-    }
-
-  const seekerData = {
-    full_name,
-    email,
-    phone,
-    password, // Hashed by authController
-    job_title: job_title || null,
-    skills: skills || null,
-    experience_level: experience_level || 'entry',
-    location_preference: location_preference || 'remote',
-    resume,
-    profile,
-  };
-
-  try {
-    const { insertIntoDatabase } = require('../utils/helpers');
-    const { insertId } = await insertIntoDatabase('seekers', seekerData, req.db);
-    const token = jwt.sign(
-      { id: insertId, jobSeeker_id: insertId, role: 'seeker' },
-      process.env.JWT_SECRET,
-      { expiresIn: '253402300799' }
-    );
-
-    res.status(201).json({
-      message: 'Job seeker registered',
-      token,
-      userId: insertId,
-      userEmail: email,
-      name: full_name,
-      resume,
+ 
+    // Prepare data for insertion
+    const seekerData = {
+      full_name,
+      email,
+      phone,
+      password,
+      job_title ,
+      skills,
+      experience_level,
+      location_preference,
       profile,
-    });
-  } catch (err) {
-    console.error('❌ handleJobSeeker error:', err);
-    if (err.code === 'ER_DUP_ENTRY') {
-      return res.status(400).json({ error: 'Email already exists' });
-    }
-    if (err.code === 'ER_NO_DEFAULT_FOR_FIELD') {
-      return res.status(400).json({ error: 'Missing required database field', details: err.message });
-    }
-    res.status(500).json({ error: 'Error signing up', details: err.message });
-  }
+      resume,
+    };
+  
+
+  // Insert into database
+  insertIntoDatabase('seekers', seekerData, res,req.db);
 };
+
+ 
 
 exports.handleEmployer = async (req, res) => {
   res.status(501).json({ error: 'Employer signup not implemented' });
