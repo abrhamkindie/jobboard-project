@@ -221,9 +221,7 @@ export const BrowseJobs = () => {
     data.append('phone', formData.phone);
     data.append('resume', formData.resume);
 
-    console.log("resume",formData.resume);
-    console.log("authToken",authToken);
-
+ 
  
     try {
       const response = await axios.post(`${BASE_URL}/jobs/apply_job`, data, {
