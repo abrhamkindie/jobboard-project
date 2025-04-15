@@ -1732,8 +1732,8 @@ exports.scheduleInterview = async (req, res) => {
     const jobDetails = job[0];
 
     const [existingInterview] = await req.db.query(
-      'SELECT id FROM interviews WHERE job_id = ? AND jobseeker_id = ? AND status = "Scheduled"',
-      [jobIdInt, applicantIdInt]
+      'SELECT id FROM interviews WHERE job_id = ? AND jobseeker_id = ? AND status = ?',
+      [jobIdInt, applicantIdInt,"Scheduled"]
     );
     if (existingInterview.length > 0) {
       return res.status(409).json({ error: 'An interview is already scheduled' });
@@ -1918,33 +1918,7 @@ exports.withdrawApplication = async (req, res) => {
   }
 };
 
-
-
-
-
-// exports.getInterviewCount = async (req, res) => {
-//   const jobSeeker_id = req.user.jobSeeker_id || req.user.id;
-
-//   console.log("jobseeker_id");
-
-
-//   if (req.user.role !== 'seeker') {
-//     return res.status(403).json({ error: 'Unauthorized: Seeker role required' });
-//   }
-
-//   try {
-//     const [result] = await req.db.query(
-//       "SELECT COUNT(*) AS interviewCount FROM interviews WHERE jobseeker_id = ? AND status = ?",
-//       [jobSeeker_id, "Scheduled"]
-//     );
-//     res.json({ interviewCount: result[0].interviewCount });
-//   } catch (err) {
-//     console.error("❌ getInterviewCount error:", err);
-//     res.status(500).json({ error: "Error fetching interview count", details: err.message });
-//   }
-
-
-// };
+ 
 
 exports.getInterviewCount = async (req, res) => {
   console.log("req.user:", req.user); // Debug
@@ -1954,7 +1928,7 @@ exports.getInterviewCount = async (req, res) => {
   }
 
   const jobseeker_id = req.user.jobSeeker_id || req.user.id;
-
+ 
   if (!jobseeker_id) {
     return res.status(400).json({ error: "Invalid user: jobseeker_id not found" });
   }
