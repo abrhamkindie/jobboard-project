@@ -1606,9 +1606,17 @@ exports.deleteJobPost = async (req, res) => {
   }
 };
 
+
+
+
+
 exports.applyJob = async (req, res) => {
   const { job_id, jobSeeker_id, fullName, email, coverLetter, linkedIn, phone, portfolio } = req.body;
   const resume = req.file?.path || null;
+
+
+  console.log("body",req.body);
+  console.log("resume",resume);
 
   if (!job_id || !jobSeeker_id || !fullName || !email || !resume) {
     return res.status(400).json({ error: 'Required fields missing' });
@@ -1635,6 +1643,14 @@ exports.applyJob = async (req, res) => {
     res.status(500).json({ error: 'Error applying for job', details: err.message });
   }
 };
+
+
+
+
+
+
+
+
 
 exports.updateApplicationStatus = async (req, res) => {
   const { Job_id, status, applicant_Id } = req.body;
