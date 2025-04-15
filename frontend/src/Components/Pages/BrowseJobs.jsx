@@ -225,6 +225,8 @@ export const BrowseJobs = () => {
       const response = await axios.post(`${BASE_URL}/jobs/apply_job`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${authToken}`
+
         },
       });
 
