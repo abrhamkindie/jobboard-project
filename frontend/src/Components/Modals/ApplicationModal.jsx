@@ -182,7 +182,7 @@ const ApplicationModal = forwardRef(function ApplicationModal({ onApply, closeEr
             </label>
             <input
               type="file"
-              name="resume"
+              name="file"
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-teal-100 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm sm:text-base"
               accept=".pdf,.doc,.docx"

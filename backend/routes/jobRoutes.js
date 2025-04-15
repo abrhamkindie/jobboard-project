@@ -12,7 +12,7 @@ router.get('/total-jobs',jobController.getTotalJobs);
 router.get('/total-employers',jobController.getTotalEmployers);
 router.post('/edit_post/:id', authenticate, jobController.editJobPost);
 router.delete('/delete/:id', authenticate, jobController.deleteJobPost);
-router.post('/apply_job', uploadResume, jobController.applyJob);
+router.post('/apply_job', authenticate,uploadFile, jobController.applyJob);
 router.get('/applied_jobs',authenticate,jobController.getAppliedJobs);
 router.get('/MyApplication',authenticate,jobController.getMyApplication); 
 router.post('/withdraw_application',authenticate,jobController.withdrawApplication); 
