@@ -1743,8 +1743,8 @@ exports.scheduleInterview = async (req, res) => {
     const interviewId = result.insertId;
 
     await req.db.query(
-      'UPDATE job_applications SET status = "Interview" WHERE job_id = ? AND jobseeker_id = ?',
-      [jobIdInt, applicantIdInt]
+      'UPDATE job_applications SET status = ? WHERE job_id = ? AND jobseeker_id = ?',
+      ["Interview",jobIdInt, applicantIdInt]
     );
 
     const notificationData = {
@@ -1775,6 +1775,7 @@ exports.scheduleInterview = async (req, res) => {
     res.status(500).json({ error: 'Failed to schedule interview', details: err.message });
   }
 };
+
 
 exports.getJobApplicants = async (req, res) => {
   const { Job_id } = req.query;
