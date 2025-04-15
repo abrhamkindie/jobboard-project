@@ -1927,14 +1927,16 @@ exports.getInterviewCount = async (req, res) => {
 
   try {
     const [result] = await req.db.query(
-      'SELECT COUNT(*) AS interviewCount FROM interviews WHERE jobseeker_id = ? AND status = "Scheduled"',
-      [jobSeeker_id]
+      "SELECT COUNT(*) AS interviewCount FROM interviews WHERE jobseeker_id = ? AND status = ?",
+      [jobseeker_id, "Scheduled"]
     );
-    res.json({ count: result[0].interviewCount });
+    res.json({ interviewCount: result[0].interviewCount });
   } catch (err) {
-    console.error('❌ getInterviewCount error:', err);
-    res.status(500).json({ error: 'Database error', details: err.message });
+    console.error("❌ getInterviewCount error:", err);
+    res.status(500).json({ error: "Error fetching interview count", details: err.message });
   }
+
+
 };
 
 exports.getInterviewAlerts = async (req, res) => {
