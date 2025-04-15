@@ -1643,7 +1643,8 @@ exports.deleteJobPost = async (req, res) => {
 
 exports.applyJob = async (req, res) => {
   const { job_id, jobSeeker_id, fullName, email, phone, coverLetter, linkedIn, portfolio } = req.body;
-  const resume = req.file?.resume?.[0]?.path || null;
+  //const resume = req.file?.resume?.[0]?.path || null;
+  const resume = req.file?.path || null;
 
   console.log("applyJob - headers:", req.headers);
   console.log("applyJob - body:", req.body);
