@@ -38,7 +38,7 @@ const uploadToDrive = async (file, fieldname) => {
       fileId: data.id,
       requestBody: { role: "reader", type: "anyone" },
     });
-    return data.webViewLink; // e.g., https://drive.google.com/file/d/abc123/view
+    return data.webViewLink;
   } catch (err) {
     throw new Error(`Drive upload failed: ${err.message}`);
   }

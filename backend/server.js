@@ -165,14 +165,11 @@
 
 
 
-
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
 const { Server } = require("socket.io");
 const http = require("http");
-const { LoadConfig } = require("./config/load_config");
-const { ConnectDB } = require("./managers/dbManager");
+const mysql = require("mysql2/promise");
 const jwt = require("jsonwebtoken");
 const uploadRoutes = require("./routes/uploadRoutes");
 const authRoutes = require("./routes/authRoutes");
@@ -182,20 +179,34 @@ const savedJobRoutes = require("./routes/savedJobRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 
 const app = express();
-const config = LoadConfig();
 
-let db = null;
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "https://jobboard-frontend-8nt8.onrender.com",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
 
-if (!config || !config.host || !config.user || !config.database) {
-  console.warn("⚠️ Warning: Database Configuration is missing or incomplete.");
-} else {
-  db = ConnectDB(config);
+let db;
+async function initializeDB() {
+  try {
+    db = await mysql.createConnection({
+      host: process.env.DB_HOST || "mysql-1294dc4d-abrhamkindie805-dcff.k.aivencloud.com",
+      port: process.env.DB_PORT || 20768,
+      user: process.env.DB_USER || "avnadmin",
+      password: process.env.DB_PASSWORD || "AVNS_bkfo85lyr0rDpfPoS9U",
+      database: process.env.DB_NAME || "defaultdb",
+      ssl: { ca: process.env.DB_SSL_CA || require("fs").readFileSync("./ca.pem") },
+    });
+    console.log("Connected to MySQL");
+  } catch (err) {
+    console.error("❌ Database connection failed:", err);
+    process.exit(1);
+  }
 }
 
-if (!db) {
-  console.error("❌ Database connection failed. Exiting...");
-  process.exit(1);
-}
+initializeDB();
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -208,7 +219,6 @@ const io = new Server(server, {
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
   if (!token) return next(new Error("Authentication error"));
-
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     socket.user = decoded;
@@ -220,25 +230,14 @@ io.use((socket, next) => {
 
 io.on("connection", (socket) => {
   console.log(`User connected: ${socket.user.id} (${socket.user.role})`);
-
   socket.on("join", (room) => {
     socket.join(room);
     console.log(`User ${socket.user.id} joined room ${room}`);
   });
-
   socket.on("disconnect", () => {
     console.log(`User disconnected: ${socket.user.id}`);
   });
 });
-
-app.use(express.json());
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL || "https://jobboard-frontend-8nt8.onrender.com",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
 
 app.use((req, res, next) => {
   req.db = db;

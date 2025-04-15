@@ -297,11 +297,9 @@
 //   });
 // };
 
-const { insertIntoDatabase } = require("../utils/helpers");
-const Base_Url = require("../config/Base_Url");
 const { google } = require("googleapis");
+const Base_Url = require("../config/Base_Url");
 
-// Initialize Google Drive API
 const auth = new google.auth.GoogleAuth({
   credentials: {
     client_email: process.env.GOOGLE_CLIENT_EMAIL,
@@ -311,17 +309,12 @@ const auth = new google.auth.GoogleAuth({
 });
 const drive = google.drive({ version: "v3", auth });
 
-// Helper to check if a URL is a Google Drive link
 const isDriveUrl = (url) => url && url.startsWith("https://drive.google.com/");
-
-// Helper to extract Drive file ID from URL
 const getDriveFileId = (url) => {
   if (!isDriveUrl(url)) return null;
   const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
   return match ? match[1] : null;
 };
-
-// Helper to delete a Drive file by ID
 const deleteDriveFile = async (fileId) => {
   if (!fileId) return;
   try {
@@ -332,23 +325,20 @@ const deleteDriveFile = async (fileId) => {
   }
 };
 
-// Get a single job seeker's profile
 exports.getJobSeekerInfo = async (req, res) => {
-  const user_id = req.query.user_id;
+  const user_id = req.query.user_id || req.user.jobSeeker_id || req.user.id;
 
   if (!user_id) {
     return res.status(400).json({ error: "User ID is required" });
   }
 
   try {
-    const [results] = await req.db.promise().query("SELECT * FROM seekers WHERE id = ?", [user_id]);
-
+    const [results] = await req.db.query("SELECT * FROM seekers WHERE id = ?", [user_id]);
     if (results.length === 0) {
       return res.status(404).json({ error: "Job seeker not found" });
     }
 
     const seeker = results[0];
-    // Apply Base_Url to non-Drive URLs
     if (seeker.profile && !isDriveUrl(seeker.profile)) {
       seeker.profile = `${Base_Url}${seeker.profile}`;
     }
@@ -363,7 +353,6 @@ exports.getJobSeekerInfo = async (req, res) => {
   }
 };
 
-// Update job seeker profile
 exports.updateUserProfile = async (req, res) => {
   const {
     full_name,
@@ -382,18 +371,16 @@ exports.updateUserProfile = async (req, res) => {
     availability,
     job_seeker_id,
   } = req.body;
-
   const profile = req.files?.profile?.[0]?.path || null;
   const resume = req.files?.resume?.[0]?.path || null;
 
-  if (!job_seeker_id) {
-    console.log("Missing job_seeker_id");
+  const user_id = job_seeker_id || req.user.jobSeeker_id || req.user.id;
+  if (!user_id) {
     return res.status(400).json({ error: "job_seeker_id is required" });
   }
 
   try {
-    // Fetch current profile and resume
-    const [current] = await req.db.promise().query("SELECT profile, resume FROM seekers WHERE id = ?", [job_seeker_id]);
+    const [current] = await req.db.query("SELECT profile, resume FROM seekers WHERE id = ?", [user_id]);
     if (current.length === 0) {
       return res.status(404).json({ error: "Job seeker not found" });
     }
@@ -401,7 +388,6 @@ exports.updateUserProfile = async (req, res) => {
     const currentProfile = current[0].profile;
     const currentResume = current[0].resume;
 
-    // Prepare update query
     const updateData = {
       full_name: full_name || null,
       email: email || null,
@@ -421,13 +407,15 @@ exports.updateUserProfile = async (req, res) => {
       availability: availability || null,
     };
 
-    const [result] = await req.db.promise().query(
-      `UPDATE seekers 
-       SET full_name = ?, email = ?, phone = ?, job_title = ?, skills = ?, 
-           experience_level = ?, location_preference = ?, resume = ?, profile = ?,
-           education = ?, work_experience = ?, bio = ?, certifications = ?,
-           linkedin = ?, github = ?, availability = ?
-       WHERE id = ?`,
+    const [result] = await req.db.query(
+      `
+      UPDATE seekers 
+      SET full_name = ?, email = ?, phone = ?, job_title = ?, skills = ?, 
+          experience_level = ?, location_preference = ?, resume = ?, profile = ?,
+          education = ?, work_experience = ?, bio = ?, certifications = ?,
+          linkedin = ?, github = ?, availability = ?
+      WHERE id = ?
+      `,
       [
         updateData.full_name,
         updateData.email,
@@ -445,16 +433,14 @@ exports.updateUserProfile = async (req, res) => {
         updateData.linkedin,
         updateData.github,
         updateData.availability,
-        job_seeker_id,
+        user_id,
       ]
     );
 
     if (result.affectedRows === 0) {
-      console.log("No rows updated - job_seeker_id not found");
       return res.status(404).json({ error: "Job seeker not found" });
     }
 
-    // Delete old Drive files if new ones were uploaded
     if (profile && currentProfile && currentProfile !== profile) {
       const oldProfileId = getDriveFileId(currentProfile);
       await deleteDriveFile(oldProfileId);
@@ -464,29 +450,34 @@ exports.updateUserProfile = async (req, res) => {
       await deleteDriveFile(oldResumeId);
     }
 
+    const [updatedSeeker] = await req.db.query("SELECT * FROM seekers WHERE id = ?", [user_id]);
+    const seeker = updatedSeeker[0];
+    if (seeker.profile && !isDriveUrl(seeker.profile)) {
+      seeker.profile = `${Base_Url}${seeker.profile}`;
+    }
+    if (seeker.resume && !isDriveUrl(seeker.resume)) {
+      seeker.resume = `${Base_Url}${seeker.resume}`;
+    }
+
     res.json({
       message: "Profile updated successfully",
-      profile: updateData.profile,
-      resume: updateData.resume,
-      affectedRows: result.affectedRows,
+      profile: seeker,
     });
   } catch (err) {
     console.error("❌ Update seeker profile error:", err);
-    res.status(500).json({ error: "Error updating job seeker profile", details: err.message });
+    res.status(500).json({ error: "Error updating profile", details: err.message });
   }
 };
 
-// Get a single employer's profile
 exports.getEmployerInfo = async (req, res) => {
-  const user_id = req.query.user_id;
+  const user_id = req.query.user_id || req.user.employer_id || req.user.id;
 
   if (!user_id) {
     return res.status(400).json({ error: "User ID is required" });
   }
 
   try {
-    const [results] = await req.db.promise().query("SELECT * FROM employers WHERE employer_id = ?", [user_id]);
-
+    const [results] = await req.db.query("SELECT * FROM employers WHERE employer_id = ?", [user_id]);
     if (results.length === 0) {
       return res.status(404).json({ error: "Employer not found" });
     }
@@ -503,7 +494,6 @@ exports.getEmployerInfo = async (req, res) => {
   }
 };
 
-// Update employer profile
 exports.updateEmployerProfile = async (req, res) => {
   const {
     full_name,
@@ -522,24 +512,20 @@ exports.updateEmployerProfile = async (req, res) => {
     employee_benefits,
     employer_id,
   } = req.body;
-
   const logo = req.files?.logo?.[0]?.path || null;
 
-  if (!employer_id) {
-    console.log("Missing employer_id");
+  const user_id = employer_id || req.user.employer_id || req.user.id;
+  if (!user_id) {
     return res.status(400).json({ error: "employer_id is required" });
   }
 
   try {
-    // Fetch current logo
-    const [current] = await req.db.promise().query("SELECT logo FROM employers WHERE employer_id = ?", [employer_id]);
+    const [current] = await req.db.query("SELECT logo FROM employers WHERE employer_id = ?", [user_id]);
     if (current.length === 0) {
       return res.status(404).json({ error: "Employer not found" });
     }
 
     const currentLogo = current[0].logo;
-
-    // Prepare update query
     const updateData = {
       full_name: full_name || null,
       email: email || null,
@@ -558,13 +544,15 @@ exports.updateEmployerProfile = async (req, res) => {
       employee_benefits: employee_benefits || null,
     };
 
-    const [result] = await req.db.promise().query(
-      `UPDATE employers 
-       SET full_name = ?, email = ?, phone = ?, company_name = ?, industry = ?, 
-           company_size = ?, job_description = ?, logo = ?, company_website = ?,
-           company_description = ?, founded_year = ?, location = ?, linkedin = ?,
-           twitter = ?, employee_benefits = ?
-       WHERE employer_id = ?`,
+    const [result] = await req.db.query(
+      `
+      UPDATE employers 
+      SET full_name = ?, email = ?, phone = ?, company_name = ?, industry = ?, 
+          company_size = ?, job_description = ?, logo = ?, company_website = ?,
+          company_description = ?, founded_year = ?, location = ?, linkedin = ?,
+          twitter = ?, employee_benefits = ?
+      WHERE employer_id = ?
+      `,
       [
         updateData.full_name,
         updateData.email,
@@ -581,28 +569,31 @@ exports.updateEmployerProfile = async (req, res) => {
         updateData.linkedin,
         updateData.twitter,
         updateData.employee_benefits,
-        employer_id,
+        user_id,
       ]
     );
 
     if (result.affectedRows === 0) {
-      console.log("No rows updated - employer_id not found");
       return res.status(404).json({ error: "Employer not found" });
     }
 
-    // Delete old logo if a new one was uploaded
     if (logo && currentLogo && currentLogo !== logo) {
       const oldLogoId = getDriveFileId(currentLogo);
       await deleteDriveFile(oldLogoId);
     }
 
+    const [updatedEmployer] = await req.db.query("SELECT * FROM employers WHERE employer_id = ?", [user_id]);
+    const employer = updatedEmployer[0];
+    if (employer.logo && !isDriveUrl(employer.logo)) {
+      employer.logo = `${Base_Url}${employer.logo}`;
+    }
+
     res.json({
       message: "Profile updated successfully",
-      logo: updateData.logo,
-      affectedRows: result.affectedRows,
+      profile: employer,
     });
   } catch (err) {
     console.error("❌ Update employer profile error:", err);
-    res.status(500).json({ error: "Error updating employer profile", details: err.message });
+    res.status(500).json({ error: "Error updating profile", details: err.message });
   }
 };
