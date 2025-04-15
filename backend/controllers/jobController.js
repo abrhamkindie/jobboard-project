@@ -1643,15 +1643,9 @@ exports.deleteJobPost = async (req, res) => {
 
 exports.applyJob = async (req, res) => {
   const { job_id, jobSeeker_id, fullName, email, phone, coverLetter, linkedIn, portfolio } = req.body;
-  //const resume = req.file?.resume?.[0]?.path || null;
-  const resume = req.file?.path || null;
+   const resume = req.file?.path || null;
 
-  console.log("applyJob - headers:", req.headers);
-  console.log("applyJob - body:", req.body);
-  console.log("applyJob - files:", req.files);
-  console.log("applyJob - resume:", resume);
-
-  if (!job_id || !jobSeeker_id || !fullName || !email || !phone || !resume) {
+  if (!job_id || !jobSeeker_id || !fullName || !email || !phone ) {
     return res.status(400).json({ 
       error: "Required fields missing",
       missingFields: { 
@@ -1659,22 +1653,25 @@ exports.applyJob = async (req, res) => {
         jobSeeker_id: !!jobSeeker_id,
         fullName: !!fullName,
         email: !!email,
-        phone: !!phone,
-        resume: !!resume 
-      }
+        phone: !!phone
+       }
     });
   }
 
   if (!req.user || req.user.jobSeeker_id !== parseInt(jobSeeker_id) || req.user.role !== "seeker") {
     return res.status(403).json({ error: "Unauthorized: Valid seeker authentication required" });
   }
-
+  
   const applicationData = {
     job_id,
     jobseeker_id: jobSeeker_id,
+    full_name: fullName,
+    email,
     resume,
-    cover_letter: coverLetter || null,
-    status: "Pending",
+    cover_letter: coverLetter,
+    linkedIn,
+    phone,
+    portfolio,
   };
 
   try {
@@ -1692,11 +1689,6 @@ exports.applyJob = async (req, res) => {
     res.status(500).json({ error: "Error submitting application", details: err.message });
   }
 };
-
-
-
-
-
 
 
 
