@@ -4,6 +4,134 @@ import BASE_URL from '../API';
 import { Link, useNavigate } from 'react-router-dom';
 
 export const SignUp = () => {
+
+
+  // const [role, setRole] = useState('');
+  // const navigate = useNavigate();
+  // const [formData, setFormData] = useState({
+  //   full_name: '',
+  //   email: '',
+  //   phone: '',
+  //   password: '',
+  //   confirm_password: '',
+  //   terms: false,
+  //   job_title: '',
+  //   skills: '',
+  //   experience_level: 'entry',
+  //   location_preference: 'remote',
+  //   resume: null,
+  //   profile: null,
+  //   company_name: '',
+  //   industry: '',
+  //   company_size: 'small',
+  //   job_description: '',
+  //   logo: null,
+  // });
+
+  // const handleRoleChange = (e) => {
+  //   setRole(e.target.value);
+  // };
+
+  // const handleChange = (e) => {
+  //   const { name, value, type, checked, files } = e.target;
+  //   if (type === 'checkbox') {
+  //     setFormData({ ...formData, [name]: checked });
+  //   } else if (type === 'file') {
+  //     setFormData({ ...formData, [name]: files[0] });
+  //   } else {
+  //     setFormData({ ...formData, [name]: value });
+  //   }
+  // };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   // Validate passwords match
+  //   if (formData.password !== formData.confirm_password) {
+  //     alert('Passwords do not match.');
+  //     return;
+  //   }
+
+  //   // Validate password strength
+  //   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+  //   if (!passwordRegex.test(formData.password)) {
+  //     alert(
+  //       'Password must be at least 6 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character.'
+  //     );
+  //     return;
+  //   }
+
+  //   // Validate terms are agreed upon
+  //   if (!formData.terms) {
+  //     alert('You must agree to the terms and conditions.');
+  //     return;
+  //   }
+
+  //   // Validate role is selected
+  //   if (!role) {
+  //     alert('Please select a role.');
+  //     return;
+  //   }
+
+  //   // Create a FormData object and append each field manually
+  //   const formDataToSubmit = new FormData();
+  //   formDataToSubmit.append('full_name', formData.full_name);
+  //   formDataToSubmit.append('email', formData.email);
+  //   formDataToSubmit.append('phone', formData.phone);
+  //   formDataToSubmit.append('password', formData.password);
+  //   formDataToSubmit.append('confirm_password', formData.confirm_password);
+  //   formDataToSubmit.append('role', role);
+  //   formDataToSubmit.append('terms', formData.terms);
+
+  //   if (role === 'seeker') {
+  //     formDataToSubmit.append('job_title', formData.job_title);
+  //     formDataToSubmit.append('skills', formData.skills);
+  //     formDataToSubmit.append('experience_level', formData.experience_level);
+  //     formDataToSubmit.append('location_preference', formData.location_preference);
+
+  //     if (formData.resume) {
+  //       formDataToSubmit.append('resume', formData.resume);
+  //     }
+  //     if (formData.profile) {
+  //       formDataToSubmit.append('profile', formData.profile);
+  //     }
+  //   } else if (role === 'employer') {
+  //     formDataToSubmit.append('company_name', formData.company_name);
+  //     formDataToSubmit.append('industry', formData.industry);
+  //     formDataToSubmit.append('company_size', formData.company_size);
+  //     formDataToSubmit.append('job_description', formData.job_description);
+
+  //     if (formData.logo) {
+  //       formDataToSubmit.append('logo', formData.logo);
+  //     }
+  //   }
+
+  //   console.log('FormData to be sent:', [...formDataToSubmit.entries()]);
+
+  //   try {
+  //     const res = await axios.post(`${BASE_URL}/auth/signup`, formDataToSubmit, {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //     });
+
+  //     if (res.data) {
+  //       setTimeout(() => navigate('/login'), 2000);
+  //       alert('✅ Sign up successful!');
+  //     }
+  //   } catch (err) {
+  //     console.error('Error during sign up:', err);
+
+  //     if (err.response) {
+  //       alert('❌ Error signing up: ' + (err.response.data.error || 'An unknown error occurred.'));
+  //     } else {
+  //       alert('❌ Error signing up: Unable to connect to the server.');
+  //     }
+  //   }
+  // };
+
+
+
   const [role, setRole] = useState('');
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -44,13 +172,11 @@ export const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate passwords match
     if (formData.password !== formData.confirm_password) {
       alert('Passwords do not match.');
       return;
     }
 
-    // Validate password strength
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
     if (!passwordRegex.test(formData.password)) {
       alert(
@@ -59,25 +185,26 @@ export const SignUp = () => {
       return;
     }
 
-    // Validate terms are agreed upon
     if (!formData.terms) {
       alert('You must agree to the terms and conditions.');
       return;
     }
 
-    // Validate role is selected
     if (!role) {
       alert('Please select a role.');
       return;
     }
 
-    // Create a FormData object and append each field manually
+    if (role === 'seeker' && !formData.resume) {
+      alert('Resume is required for job seekers.');
+      return;
+    }
+
     const formDataToSubmit = new FormData();
     formDataToSubmit.append('full_name', formData.full_name);
     formDataToSubmit.append('email', formData.email);
     formDataToSubmit.append('phone', formData.phone);
     formDataToSubmit.append('password', formData.password);
-    formDataToSubmit.append('confirm_password', formData.confirm_password);
     formDataToSubmit.append('role', role);
     formDataToSubmit.append('terms', formData.terms);
 
@@ -86,7 +213,6 @@ export const SignUp = () => {
       formDataToSubmit.append('skills', formData.skills);
       formDataToSubmit.append('experience_level', formData.experience_level);
       formDataToSubmit.append('location_preference', formData.location_preference);
-
       if (formData.resume) {
         formDataToSubmit.append('resume', formData.resume);
       }
@@ -98,7 +224,6 @@ export const SignUp = () => {
       formDataToSubmit.append('industry', formData.industry);
       formDataToSubmit.append('company_size', formData.company_size);
       formDataToSubmit.append('job_description', formData.job_description);
-
       if (formData.logo) {
         formDataToSubmit.append('logo', formData.logo);
       }
@@ -108,18 +233,19 @@ export const SignUp = () => {
 
     try {
       const res = await axios.post(`${BASE_URL}/auth/signup`, formDataToSubmit, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+        headers: { 'Content-Type': 'multipart/form-data' },
+        timeout: 20000, // 20s
       });
 
       if (res.data) {
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('userId', res.data.userId);
+        localStorage.setItem('role', role);
         setTimeout(() => navigate('/login'), 2000);
         alert('✅ Sign up successful!');
       }
     } catch (err) {
-      console.error('Error during sign up:', err);
-
+      console.error('Error during sign up:', err.response?.data || err.message);
       if (err.response) {
         alert('❌ Error signing up: ' + (err.response.data.error || 'An unknown error occurred.'));
       } else {

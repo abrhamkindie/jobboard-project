@@ -10,13 +10,16 @@
 // };
  
 
+ 
+
 // utils/helpers.js
 exports.insertIntoDatabase = async (table, data, db) => {
   try {
+    console.log(`Inserting into ${table}:`, data);
     const [result] = await db.promise().query(`INSERT INTO ${table} SET ?`, data);
     return { insertId: result.insertId };
   } catch (err) {
-    console.error(`❌ Error inserting data into ${table}:`, err);
+    console.error(`❌ Error inserting into ${table}:`, err);
     throw err;
   }
 };

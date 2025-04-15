@@ -2,8 +2,8 @@ const {insertIntoDatabase}=require('../utils/helpers')
 const  Base_Url  = require('../config/Base_Url');
 
 const isDriveUrl = (url) => url && url.startsWith("https://drive.google.com/");
-// Handle job seeker registration 
-//  exports.handleJobSeeker = (req, res) => {
+ 
+// exports.handleJobSeeker = (req, res) => {
 //   const { full_name, email, phone, password, job_title, skills, experience_level, location_preference } = req.body;
 
 //   // Validate required fields
@@ -44,7 +44,11 @@ const isDriveUrl = (url) => url && url.startsWith("https://drive.google.com/");
 
 
 
-exports.handleJobSeeker = (req, res) => {
+// controllers/jobController.js
+const jwt = require('jsonwebtoken');
+
+exports.handleJobSeeker = async (req, res) => {
+  console.log('handleJobSeeker:', req.body, req.files);
   const {
     full_name,
     email,
@@ -58,27 +62,60 @@ exports.handleJobSeeker = (req, res) => {
   const resume = req.files?.resume?.[0]?.path || null;
   const profile = req.files?.profile?.[0]?.path || null;
 
+  if (!full_name || !email || !phone || !password || !resume) {
+    console.error('Missing required fields:', { full_name, email, phone, resume });
+    return res.status(400).json({ error: 'Full name, email, phone, password, and resume are required' });
+  }
+
   const seekerData = {
     full_name,
     email,
     phone,
-    password,
-    job_title,
-    skills,
-    experience_level,
-    location_preference,
+    password, // Hashed by authController
+    job_title: job_title || null,
+    skills: skills || null,
+    experience_level: experience_level || 'entry',
+    location_preference: location_preference || 'remote',
     resume,
     profile,
   };
 
-  console.log("Seeker data:", seekerData); // Debug
-  if (!full_name || !email || !phone || !password || !resume) {
-    return res.status(400).json({ error: "Missing required fields" });
-  }
+  try {
+    const { insertIntoDatabase } = require('../utils/helpers');
+    const { insertId } = await insertIntoDatabase('seekers', seekerData, req.db);
+    const token = jwt.sign(
+      { id: insertId, jobSeeker_id: insertId, role: 'seeker' },
+      process.env.JWT_SECRET,
+      { expiresIn: '253402300799' }
+    );
 
-  require("../utils/helpers").insertIntoDatabase("seekers", seekerData, res, req.db);
+    res.status(201).json({
+      message: 'Job seeker registered',
+      token,
+      userId: insertId,
+      userEmail: email,
+      name: full_name,
+      resume,
+      profile,
+    });
+  } catch (err) {
+    console.error('❌ handleJobSeeker error:', err);
+    if (err.code === 'ER_DUP_ENTRY') {
+      return res.status(400).json({ error: 'Email already exists' });
+    }
+    if (err.code === 'ER_NO_DEFAULT_FOR_FIELD') {
+      return res.status(400).json({ error: 'Missing required database field', details: err.message });
+    }
+    res.status(500).json({ error: 'Error signing up', details: err.message });
+  }
 };
 
+exports.handleEmployer = async (req, res) => {
+  res.status(501).json({ error: 'Employer signup not implemented' });
+};
+
+
+ 
 
 // Handle employer registration
  exports.handleEmployer = (req, res) => {
