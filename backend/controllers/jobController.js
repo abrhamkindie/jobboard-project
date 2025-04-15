@@ -1624,8 +1624,10 @@ exports.applyJob = async (req, res) => {
   const { job_id, jobSeeker_id, fullName, email, phone, coverLetter, linkedIn, portfolio } = req.body;
   const resume = req.files?.resume?.[0]?.path || null;
 
-  console.log("body:", req.body, "resume:", resume);
-
+  console.log("applyJob - body:", req.body);
+  console.log("applyJob - files:", req.files);
+  console.log("applyJob - resume:", resume);
+  
   if (!job_id || !jobSeeker_id || !fullName || !email || !phone || !resume) {
     return res.status(400).json({ error: "Required fields missing (job_id, jobSeeker_id, fullName, email, phone, resume)" });
   }
