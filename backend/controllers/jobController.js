@@ -1318,8 +1318,8 @@ const isDriveUrl = (url) => url && url.startsWith("https://drive.google.com/");
 
 exports.handleJobSeeker = async (req, res) => {
   const { full_name, email, phone, password, job_title, skills, experience_level, location_preference } = req.body;
-  const resume = req.files?.resume?.[0]?.path || null;
-  const profile = req.files?.profile?.[0]?.path || null;
+  const resume = req.files?.resume?.[0]?.url || null;
+  const profile = req.files?.profile?.[0]?.url || null;
 
   if (!full_name || !email || !phone || !password || !resume || !profile) {
     return res.status(400).json({ error: 'Required fields missing (full_name, email, phone, password, resume, profile)' });
@@ -1370,7 +1370,7 @@ exports.handleJobSeeker = async (req, res) => {
 
 exports.handleEmployer = async (req, res) => {
   const { full_name, email, phone, password, company_name, industry, company_size, job_description } = req.body;
-  const logo = req.files?.logo?.[0]?.path || null;
+  const logo = req.files?.logo?.[0]?.url || null;
 
   if (!full_name || !email || !phone || !password || !company_name || !industry || !company_size || !job_description) {
     return res.status(400).json({ error: 'Required fields missing' });
@@ -1608,69 +1608,7 @@ exports.deleteJobPost = async (req, res) => {
 
 
 
-
-
  
-
-
-
-
-
-
-
-
-
-// exports.applyJob = async (req, res) => {
-//   const { job_id, jobSeeker_id, fullName, email, phone, coverLetter, linkedIn, portfolio } = req.body;
-//    const resume = req.file?.path || null;
-
-//   if (!job_id || !jobSeeker_id || !fullName || !email || !phone ) {
-//     return res.status(400).json({ 
-//       error: "Required fields missing",
-//       missingFields: { 
-//         job_id: !!job_id,
-//         jobSeeker_id: !!jobSeeker_id,
-//         fullName: !!fullName,
-//         email: !!email,
-//         phone: !!phone
-//        }
-//     });
-//   }
-  
-//   console.log("request form req.user",req.user);
-  
-//   const applicationData = {
-//     job_id,
-//     jobseeker_id: jobSeeker_id,
-//     full_name: fullName,
-//     email,
-//     resume,
-//     cover_letter: coverLetter,
-//     linkedIn,
-//     phone,
-//     portfolio,
-//   };
-
-//   try {
-//     const { insertIntoDatabase } = require("../utils/helpers");
-//     const { insertId } = await insertIntoDatabase("job_applications", applicationData, req.db);
-
-//     res.status(201).json({
-//       message: "Job application submitted successfully",
-//       applicationId: insertId,
-//     });
-//   } catch (err) {
-//     console.error("❌ applyJob error:", err);
-//     if (err.code === "ER_DUP_ENTRY") return res.status(400).json({ error: "Application already submitted" });
-//     if (err.code === "ER_BAD_NULL_ERROR") return res.status(400).json({ error: "Required field missing", details: err.sqlMessage });
-//     res.status(500).json({ error: "Error submitting application", details: err.message });
-//   }
-// };
-
-
-
-
-
 
 exports.applyJob = async (req, res) => {
   const { job_id, jobSeeker_id, fullName, email, phone, coverLetter, linkedIn, portfolio } = req.body;
