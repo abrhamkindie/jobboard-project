@@ -116,12 +116,6 @@ export const EmpSidebar = ({ onSetActiveContent, activeContent }) => {
 
 
 
-
-
-
-
- 
-
   useEffect(() => {
         axios
       .get(`${BASE_URL}/profile/employer_profile`, {
@@ -139,11 +133,6 @@ export const EmpSidebar = ({ onSetActiveContent, activeContent }) => {
         setError("Failed to load profile. Please try again.");
        });
   }, [employerId, authToken]);
-
-
-
-
-
 
 
 
@@ -310,7 +299,7 @@ export const EmpSidebar = ({ onSetActiveContent, activeContent }) => {
                 className="w-20 h-20 rounded-full border-2 border-teal-100 object-cover hover:scale-105 transition-transform duration-300 shadow-md"
               /> */}
           <img
-            src={getDriveImageUrl(userProfile.companyLogo) || "/default-profile.jpg"}
+            src={getDriveImageUrl(userProfile.logo) || "/default-profile.jpg"}
             alt="companyLogo"
             className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-teal-200 shadow-md"
             onError={(e) => (e.target.src = "/default-profile.jpg")}  
