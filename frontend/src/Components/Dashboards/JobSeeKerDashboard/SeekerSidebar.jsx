@@ -308,11 +308,12 @@ export const SeekerSidebar = ({ onSetActiveContent, activeContent }) => {
   const userId = localStorage.getItem('user_Id');
   const userRole = localStorage.getItem('role');
 
-  // Reuse getDriveImageUrl from JobSeekerProfile logic
   const getDriveImageUrl = (url) => {
     if (!url || !url.includes("drive.google.com")) return null;
     const fileIdMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    return fileIdMatch ? `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}` : null;
+    if (!fileIdMatch) return null;
+    // Use backend proxy to avoid CORS
+    return `${BASE_URL}/upload/proxy-image?url=${encodeURIComponent(`https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`)}`;
   };
 
   useEffect(() => {
@@ -321,7 +322,6 @@ export const SeekerSidebar = ({ onSetActiveContent, activeContent }) => {
       return;
     }
 
-    // Fetch profile from backend
     const fetchProfile = async () => {
       try {
         const response = await axios.get(`${BASE_URL}/profile/seeker_profile`, {
@@ -333,7 +333,6 @@ export const SeekerSidebar = ({ onSetActiveContent, activeContent }) => {
       } catch (err) {
         console.error('Failed to fetch profile:', err.message);
         setError('Failed to load profile data.');
-        // Fallback to localStorage
         const name = localStorage.getItem('name');
         const picture = localStorage.getItem('profile_picture_url');
         if (name) setUser({ name, picture });
@@ -499,7 +498,7 @@ export const SeekerSidebar = ({ onSetActiveContent, activeContent }) => {
               <img
                 src={getDriveImageUrl(user.picture) || '/default-profile.jpg'}
                 alt="Profile"
-                className="w-20 h-20 rounded-full border-2 border-teal-100 object-cover hover:scale-105 transition-transform duration-300 shadow-md"
+                className="w-20 h-20 rounded-full border-2 border-teal-100 object-cover hover:scale-105 transition-transform duration300 shadow-md"
                 onError={(e) => {
                   console.warn('SeekerSidebar - Image load error:', user.picture);
                   e.target.src = '/default-profile.jpg';
