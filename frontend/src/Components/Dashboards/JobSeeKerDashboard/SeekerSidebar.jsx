@@ -8,19 +8,34 @@
  import BASE_URL from '../../API';
  
  export const SeekerSidebar = ({ onSetActiveContent, activeContent }) => {
-   const [user, setUser] = useState({ name: '', picture: null });
+   //const [user, setUser] = useState({ name: '', picture: null });
    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
    const [interviewCount, setInterviewCount] = useState(0);
    const [interviewAlerts, setInterviewAlerts] = useState([]);
    const [showAlerts, setShowAlerts] = useState(false);
    const [messageCount, setMessageCount] = useState(0);
+   const [userProfile, setUserProfile] = useState({});
    const [error, setError] = useState(null);
-    
-
    const authToken = localStorage.getItem('authToken');
    const userId = localStorage.getItem('user_Id');
    const userRole = localStorage.getItem('role');
  
+
+
+   const getDriveImageUrl = (url) => {
+
+    if (!url || !url.includes("drive.google.com")) return null;
+
+    // Extract file ID from different Google Drive URL formats
+    const fileId = url.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]+)/)?.[1];
+    if (!fileId) return null;
+  
+    // Use Google's thumbnail proxy (works in <img> tags)
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+  };
+
+
+
    useEffect(() => {
      if (!authToken || !userId || !userRole) {
        setError('Authentication required. Please log in.');
@@ -65,11 +80,43 @@
  
      return () => socket.disconnect();
    }, [authToken, userId, userRole]);
+
+
+
+
+
+  useEffect(() => {
+
+  
+
+    axios
+      .get(`${BASE_URL}/profile/seeker_profile`, {
+        params: { user_id: userId },
+        headers: { Authorization: `Bearer ${authToken}` },
+      })
+      .then((response) => {
+        const data = response.data;
+         setUserProfile(data);
+         localStorage.setItem("profile_picture_url", data.profile || "");
+       })
+      .catch((error) => {
+        console.error("Error fetching job seeker profile:", error);
+        setError("Failed to load profile. Please try again.");
+       });
+  }, [authToken,userId]);
+
+
+
+
+
+
+
+
  
    useEffect(() => {
-     const name = localStorage.getItem('name');
-     const picture = localStorage.getItem('profile_picture_url');
-     if (name) setUser({ name, picture });
+    //  const name = localStorage.getItem('name');
+    //  const picture = localStorage.getItem('profile_picture_url');
+    //  if (name) setUser({ name, picture });
  
      const fetchInitialData = async () => {
        if (!authToken) {
@@ -182,21 +229,30 @@
            isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
          } lg:translate-x-0 z-0 shadow-sm`}
        >
-         {user.picture && (
+         {userProfile.profile && (
            <div className="flex flex-col items-center mb-8">
              <div className="relative flex justify-center items-center w-full max-w-xs">
-               <img
+               {/* <img
                  src={`${BASE_URL}${user.picture}`}
                  alt="Profile"
                  className="w-20 h-20 rounded-full border-2 border-teal-100 object-cover hover:scale-105 transition-transform duration-300 shadow-md"
-               />
+               /> */}
+
+          <img
+            src={getDriveImageUrl(userProfile.profile) || "/default-profile.jpg"}
+            alt="companyLogo"
+            className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-teal-200 shadow-md"
+            onError={(e) => (e.target.src = "/default-profile.jpg")}  
+          />
+
+
                <button onClick={handleEditProfile} className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full hover:bg-teal-50">
                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-teal-600 hover:text-teal-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                  </svg>
                </button>
              </div>
-             <h1 className="text-gray-900 font-semibold text-lg mt-4 text-center">{user.name}</h1>
+             <h1 className="text-gray-900 font-semibold text-lg mt-4 text-center">{userProfile.full_name}</h1>
            </div>
          )}
          {error && <div className="mb-4 p-2 bg-red-100 text-red-700 text-sm rounded-lg">{error}</div>}
