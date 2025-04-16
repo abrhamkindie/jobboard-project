@@ -76,7 +76,7 @@ const JobSeekerProfile = () => {
         setError("Failed to load profile. Please try again.");
         setLoading(false);
       });
-  }, [jobSeekerId, authToken, navigate]);
+  }, [jobSeekerId, authToken, navigate,profile.profile]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
