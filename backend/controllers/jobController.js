@@ -1823,7 +1823,7 @@ exports.scheduleInterview = async (req, res) => {
     return res.status(400).json({ error: 'Invalid date' });
   }
 
-  const document_url = req.file?.path || null;
+   const document_url = req.file?.url || null;
 
   const interviewData = {
     job_id: jobIdInt,

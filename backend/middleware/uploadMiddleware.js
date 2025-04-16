@@ -137,7 +137,33 @@ const uploadResume = (req, res, next) => {
 };
 
 
-const uploadFile = upload.single("file");
+const uploadFile = (req, res, next) => {
+  console.log("uploadResume - Incoming Request - Body:", req.body);
+  upload.single("file")(req, res, async (err) => {
+    if (err instanceof multer.MulterError) {
+      console.error("uploadResume - MulterError:", err);
+      return res.status(400).json({ error: "File upload error", details: err.message });
+    } else if (err) {
+      console.error("uploadResume - Upload Error:", err.message);
+      return res.status(400).json({ error: err.message });
+    }
+    if (!req.file) {
+      console.error("uploadResume - No resume file provided");
+      return res.status(400).json({ error: "Resume file is required" });
+    }
+    try {
+      const fileUrl = await uploadToDrive(req.file, "file");
+      console.log("uploadResume - File uploaded to Drive:", fileUrl);
+      req.file.url = fileUrl; // Attach URL for jobController
+      next();
+    } catch (err) {
+      console.error("uploadResume - Drive Upload Error:", err);
+      res.status(500).json({ error: "Failed to upload resume to Drive", details: err.message });
+    }
+  });
+};
+
+//const uploadFile = upload.single("file");
 //const uploadResume = upload.single("resume");
 
 module.exports = { uploadMiddleware, uploadFile, uploadResume };
