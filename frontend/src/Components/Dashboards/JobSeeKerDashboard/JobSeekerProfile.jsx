@@ -474,7 +474,8 @@ const JobSeekerProfile = () => {
 <img
   src={getDriveImageUrl(profile.profile) || "/default-profile.jpg"}
   alt="Profile"
-  onError={(e) => (e.target.src = "/default-profile.jpg")}
+  className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-2 border-teal-200 shadow-md"
+  onError={(e) => (e.target.src = "/default-profile.jpg")}  
 />
                
                   <div className="flex-1 space-y-4">
