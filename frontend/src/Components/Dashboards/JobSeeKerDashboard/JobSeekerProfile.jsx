@@ -458,10 +458,7 @@ const JobSeekerProfile = () => {
                     e.target.src = "/default-profile.jpg";
                     }}
                     />
-                <p className="">
-                getDriveImageUrl   {getDriveImageUrl(profile.profile) ? getDriveImageUrl(profile.profile):"nop"};
-
-                </p>
+               
                   <div className="flex-1 space-y-4">
                     <div>
                       <span className="text-sm font-medium text-gray-500">Full Name</span>
@@ -469,6 +466,12 @@ const JobSeekerProfile = () => {
                         {userProfile.full_name || "Not set"}
                       </p>
                     </div>
+
+
+                    <p className="">
+                getDriveImageUrl   {getDriveImageUrl(profile.profile) ? getDriveImageUrl(profile.profile):"nop"};
+
+                </p>
                     <div>
                       <span className="text-sm font-medium text-gray-500">Desired Job Title</span>
                       <p className="text-lg font-semibold text-gray-800">
