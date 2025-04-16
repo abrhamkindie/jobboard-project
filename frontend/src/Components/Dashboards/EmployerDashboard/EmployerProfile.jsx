@@ -420,11 +420,11 @@ const EmployerProfile = () => {
                 <h2 className="text-xl font-semibold text-teal-600 mb-4">Profile Overview</h2>
                 <div className="flex items-start gap-8">
                 <img
-  src={getDriveImageUrl(profile.profile) || "/default-profile.jpg"}
-  alt="Profile"
-  className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-2 border-teal-200 shadow-md"
-  onError={(e) => (e.target.src = "/default-profile.jpg")}  
-/>
+                src={getDriveImageUrl(profile.logo) || "/default-profile.jpg"}
+                alt="logo"
+                className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-2 border-teal-200 shadow-md"
+                onError={(e) => (e.target.src = "/default-profile.jpg")}  
+              />
                   <div className="flex-1 space-y-4">
                     <div>
                       <span className="text-sm font-medium text-gray-500">Contact Name</span>
