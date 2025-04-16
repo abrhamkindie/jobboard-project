@@ -1610,14 +1610,35 @@ exports.deleteJobPost = async (req, res) => {
 
 
 
+ 
+
+
+
+
+
+
+
+
+
 // exports.applyJob = async (req, res) => {
-//   const { job_id, jobSeeker_id, fullName, email, coverLetter, linkedIn, phone, portfolio } = req.body;
-//   const resume = req.files?.resume?.[0]?.path || null;
+//   const { job_id, jobSeeker_id, fullName, email, phone, coverLetter, linkedIn, portfolio } = req.body;
+//    const resume = req.file?.path || null;
 
-//   if (!job_id || !jobSeeker_id || !fullName || !email || !resume) {
-//     return res.status(400).json({ error: 'Required fields missing' });
+//   if (!job_id || !jobSeeker_id || !fullName || !email || !phone ) {
+//     return res.status(400).json({ 
+//       error: "Required fields missing",
+//       missingFields: { 
+//         job_id: !!job_id,
+//         jobSeeker_id: !!jobSeeker_id,
+//         fullName: !!fullName,
+//         email: !!email,
+//         phone: !!phone
+//        }
+//     });
 //   }
-
+  
+//   console.log("request form req.user",req.user);
+  
 //   const applicationData = {
 //     job_id,
 //     jobseeker_id: jobSeeker_id,
@@ -1631,12 +1652,18 @@ exports.deleteJobPost = async (req, res) => {
 //   };
 
 //   try {
-//     const { insertIntoDatabase } = require('../utils/helpers');
-//     const { insertId } = await insertIntoDatabase('job_applications', applicationData, req.db);
-//     res.json({ message: 'Job application submitted successfully', applicationId: insertId });
+//     const { insertIntoDatabase } = require("../utils/helpers");
+//     const { insertId } = await insertIntoDatabase("job_applications", applicationData, req.db);
+
+//     res.status(201).json({
+//       message: "Job application submitted successfully",
+//       applicationId: insertId,
+//     });
 //   } catch (err) {
-//     console.error('❌ applyJob error:', err);
-//     res.status(500).json({ error: 'Error applying for job', details: err.message });
+//     console.error("❌ applyJob error:", err);
+//     if (err.code === "ER_DUP_ENTRY") return res.status(400).json({ error: "Application already submitted" });
+//     if (err.code === "ER_BAD_NULL_ERROR") return res.status(400).json({ error: "Required field missing", details: err.sqlMessage });
+//     res.status(500).json({ error: "Error submitting application", details: err.message });
 //   }
 // };
 
@@ -1645,61 +1672,85 @@ exports.deleteJobPost = async (req, res) => {
 
 
 
-
-
-
 exports.applyJob = async (req, res) => {
   const { job_id, jobSeeker_id, fullName, email, phone, coverLetter, linkedIn, portfolio } = req.body;
-   const resume = req.file?.path || null;
+  const resume = req.file?.url || null; // Use req.file.url instead of req.file.path
 
-  if (!job_id || !jobSeeker_id || !fullName || !email || !phone ) {
-    return res.status(400).json({ 
+  console.log("applyJob - Incoming Request:", {
+    job_id,
+    jobSeeker_id,
+    fullName,
+    email,
+    phone,
+    resume,
+    coverLetter,
+    linkedIn,
+    portfolio,
+    user: req.user,
+  });
+
+  if (!job_id || !jobSeeker_id || !fullName || !email || !phone || !resume) {
+    console.error("applyJob - Missing required fields:", {
+      job_id: !!job_id,
+      jobSeeker_id: !!jobSeeker_id,
+      fullName: !!fullName,
+      email: !!email,
+      phone: !!phone,
+      resume: !!resume,
+    });
+    return res.status(400).json({
       error: "Required fields missing",
-      missingFields: { 
+      missingFields: {
         job_id: !!job_id,
         jobSeeker_id: !!jobSeeker_id,
         fullName: !!fullName,
         email: !!email,
-        phone: !!phone
-       }
+        phone: !!phone,
+        resume: !!resume,
+      },
     });
   }
-  
-  console.log("request form req.user",req.user);
-  
+
+  console.log("applyJob - req.user:", req.user);
+
+  if (!req.user || req.user.jobSeeker_id !== parseInt(jobSeeker_id) || req.user.role !== "seeker") {
+    console.error("applyJob - Authentication error:", { user: req.user, jobSeeker_id });
+    return res.status(403).json({ error: "Unauthorized: Valid seeker authentication required" });
+  }
+
   const applicationData = {
     job_id,
     jobseeker_id: jobSeeker_id,
     full_name: fullName,
     email,
     resume,
-    cover_letter: coverLetter,
-    linkedIn,
+    cover_letter: coverLetter || null,
+    linkedIn: linkedIn || null,
     phone,
-    portfolio,
+    portfolio: portfolio || null,
+    status: "pending",
+    applied_at: new Date(),
   };
+
+  console.log("applyJob - Inserting into job_applications:", applicationData);
 
   try {
     const { insertIntoDatabase } = require("../utils/helpers");
     const { insertId } = await insertIntoDatabase("job_applications", applicationData, req.db);
+
+    console.log("applyJob - Success:", { applicationId: insertId });
 
     res.status(201).json({
       message: "Job application submitted successfully",
       applicationId: insertId,
     });
   } catch (err) {
-    console.error("❌ applyJob error:", err);
+    console.error("applyJob - Error:", err);
     if (err.code === "ER_DUP_ENTRY") return res.status(400).json({ error: "Application already submitted" });
     if (err.code === "ER_BAD_NULL_ERROR") return res.status(400).json({ error: "Required field missing", details: err.sqlMessage });
     res.status(500).json({ error: "Error submitting application", details: err.message });
   }
 };
-
-
-
-
-
-
 
 
 
