@@ -176,6 +176,9 @@ exports.login = async (req, res) => {
       }
 
       const token = jwt.sign({ id: seeker.id, jobSeeker_id: seeker.id, role: 'seeker' }, process.env.JWT_SECRET, { expiresIn: '7d' });
+      console.log("login - Seeker token generated:", { id: seeker.id, email });
+ 
+
       return res.json({
         message: 'Login successful',
         role: 'seeker',
