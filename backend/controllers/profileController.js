@@ -328,6 +328,7 @@ const deleteDriveFile = async (fileId) => {
 exports.getJobSeekerInfo = async (req, res) => {
   const user_id = req.query.user_id || req.user.jobSeeker_id || req.user.id;
 
+  console.log("request form getjobseekerinfo",req.user);
   if (!user_id) {
     return res.status(400).json({ error: "User ID is required" });
   }
