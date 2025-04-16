@@ -1,47 +1,100 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import axios from "axios";
 import BASE_URL from "./API";
 
 export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole] = useState(null);
-  const [profilePicture, setProfilePicture] = useState(null);
-  const [company_logo, setCompany_logo] = useState(null);
+  // const [profilePicture, setProfilePicture] = useState(null);
+  // const [company_logo, setCompany_logo] = useState(null);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false); // New state for mobile menu
+  const [userProfile, setUserProfile] = useState({});
+
+  const token = localStorage.getItem("authToken");
+  const userRole = localStorage.getItem("role");
+  const userId = localStorage.getItem('user_Id');
+  const employerId = localStorage.getItem("employer_id");  
+
 
   const navigate = useNavigate();
 
+
+
+ 
+ 
+
+
+
+   const getDriveImageUrl = (url) => {
+
+    if (!url || !url.includes("drive.google.com")) return null;
+
+    // Extract file ID from different Google Drive URL formats
+    const fileId = url.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]+)/)?.[1];
+    if (!fileId) return null;
+  
+    // Use Google's thumbnail proxy (works in <img> tags)
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+  };
+
+
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    const userRole = localStorage.getItem("role");
-    const userProfilePicture = localStorage.getItem("profile_picture_url");
-    const userCompany_logo = localStorage.getItem("companyLogo");
+
+    const endpoint = role === "seeker" ? "employer_profile" : "seeker_profile";
+    axios
+  .get(`${BASE_URL}/profile/ ${endpoint}`, {
+    params: { user_id: role === "seeker" ? userId :employerId },
+    headers: { Authorization: `Bearer ${token}` },
+  })
+  .then((response) => {
+    const data = response.data;
+    setUserProfile(data);
+
+    localStorage.setItem("companyLogo", data.logo || "");
+   })
+  .catch((error) => {
+    console.error("Error fetching employer profile:", error);
+    });
+}, [employerId,userId,role, token]);
+
+
+
+
+
+
+
+
+  useEffect(() => {
+    
+    // const userProfilePicture = localStorage.getItem("profile_picture_url");
+    // const userCompany_logo = localStorage.getItem("companyLogo");
 
     if (token && userRole) {
       setIsLoggedIn(true);
       setRole(userRole);
-      setProfilePicture(userProfilePicture);
-      setCompany_logo(userCompany_logo);
+      // setProfilePicture(userProfilePicture);
+      // setCompany_logo(userCompany_logo);
     }
 
     const handleAuthChange = () => {
       const updatedToken = localStorage.getItem("authToken");
       const updatedRole = localStorage.getItem("role");
-      const updatedProfilePicture = localStorage.getItem("profile_picture_url");
-      const updatedCompany_logo = localStorage.getItem("companyLogo");
+      // const updatedProfilePicture = localStorage.getItem("profile_picture_url");
+      // const updatedCompany_logo = localStorage.getItem("companyLogo");
 
       if (updatedToken) {
         setIsLoggedIn(true);
         setRole(updatedRole);
-        setProfilePicture(updatedProfilePicture);
-        setCompany_logo(updatedCompany_logo);
+        // setProfilePicture(updatedProfilePicture);
+        // setCompany_logo(updatedCompany_logo);
       } else {
         setIsLoggedIn(false);
         setRole(null);
-        setProfilePicture(null);
-        setCompany_logo(null);
+        // setProfilePicture(null);
+        // setCompany_logo(null);
       }
     };
 
@@ -50,7 +103,7 @@ export default function Header() {
     return () => {
       window.removeEventListener("authChange", handleAuthChange);
     };
-  }, []);
+  }, [token,userRole]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -80,8 +133,8 @@ export default function Header() {
 
     setIsLoggedIn(false);
     setRole(null);
-    setProfilePicture(null);
-    setCompany_logo(null);
+    // setProfilePicture(null);
+    // setCompany_logo(null);
 
     window.dispatchEvent(new Event("authChange"));
     navigate("/login");
@@ -210,13 +263,15 @@ export default function Header() {
                     className="flex items-center px-4 py-2"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {profilePicture && (
+                    {userProfile.profile && (
                       <img
-                        src={`${BASE_URL}${profilePicture}`}
-                        alt="Profile"
-                        className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border-2 border-teal-300 hover:border-teal-400 transition transform hover:scale-110"
-                      />
+                      src={getDriveImageUrl(userProfile.profile) || "/default-profile.jpg"}
+                      alt="profile"
+                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-teal-200 shadow-md"
+                      onError={(e) => (e.target.src = "/default-profile.jpg")}  
+                    />
                     )}
+                    
                   </NavLink>
                 </li>
               </>
@@ -250,11 +305,14 @@ export default function Header() {
                     className="flex items-center px-4 py-2"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {company_logo && (
-                      <img
-                        src={`${BASE_URL}${company_logo}`}
-                        alt="Company Logo"
-                        className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border-2 border-teal-300 hover:border-teal-400 transition transform hover:scale-110"
+
+                    
+                    {userProfile.logo && (
+                        <img
+                        src={getDriveImageUrl(userProfile.logo) || "/default-profile.jpg"}
+                        alt="companyLogo"
+                        className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-teal-200 shadow-md"
+                        onError={(e) => (e.target.src = "/default-profile.jpg")}  
                       />
                     )}
                   </NavLink>

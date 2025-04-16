@@ -35,9 +35,6 @@ export const EmpSidebar = ({ onSetActiveContent, activeContent }) => {
    const userRole = localStorage.getItem('role') || 'employer';
 
 
-
-
-
    const getDriveImageUrl = (url) => {
 
     if (!url || !url.includes("drive.google.com")) return null;
@@ -50,8 +47,7 @@ export const EmpSidebar = ({ onSetActiveContent, activeContent }) => {
     return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
   };
 
-  
- 
+   
 
   // WebSocket setup
   useEffect(() => {
