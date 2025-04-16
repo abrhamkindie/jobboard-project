@@ -1641,6 +1641,13 @@ exports.deleteJobPost = async (req, res) => {
 // };
 
 
+
+
+
+
+
+
+
 exports.applyJob = async (req, res) => {
   const { job_id, jobSeeker_id, fullName, email, phone, coverLetter, linkedIn, portfolio } = req.body;
    const resume = req.file?.path || null;
@@ -1658,6 +1665,9 @@ exports.applyJob = async (req, res) => {
     });
   }
   console.log("req.user",req.user);
+  console.log("jobseeker_id",req.body.jobSeeker_id);
+  console.log("request from body",req.body);
+
 
   if (!req.user || req.user.jobSeeker_id !== parseInt(jobSeeker_id) || req.user.role !== "seeker") {
     return res.status(403).json({ error: "Unauthorized: Valid seeker authentication required" });
@@ -1690,6 +1700,14 @@ exports.applyJob = async (req, res) => {
     res.status(500).json({ error: "Error submitting application", details: err.message });
   }
 };
+
+
+
+
+
+
+
+
 
 
 
