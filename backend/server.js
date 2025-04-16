@@ -216,6 +216,38 @@ const io = new Server(server, {
   },
 });
 
+
+// io.on("connection", (socket) => {
+//   const token = socket.handshake.auth.token;
+
+//   if (!token) {
+//     console.log("User connected: no token");
+//     socket.disconnect();
+//     return;
+//   }
+
+//   try {
+//     const user = jwt.verify(token, process.env.JWT_SECRET);
+//     if (!user.id || !user.role) {
+//       throw new Error("Invalid token: missing id or role");
+//     }
+//     socket.user = user; // Store user for disconnect
+//     console.log(`User connected: ${user.id} (${user.role})`);
+
+//     const room = `${user.role}:${user.employer_id || user.jobSeeker_id || user.id}`;
+//     socket.join(room);
+//     console.log(`User ${user.id} joined room ${room}`);
+
+//     socket.on("disconnect", () => {
+//       console.log(`User disconnected: ${user.id}`);
+//     });
+//   } catch (err) {
+//     console.error("Socket auth error:", err);
+//     socket.disconnect();
+//   }
+// });
+
+
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
   if (!token) return next(new Error("Authentication error"));
@@ -228,48 +260,17 @@ io.use((socket, next) => {
   }
 });
 
-// io.on("connection", (socket) => {
-//   console.log(`User connected: ${socket.user.id} (${socket.user.role})`);
-//   socket.on("join", (room) => {
-//     socket.join(room);
-//     console.log(`User ${socket.user.id} joined room ${room}`);
-//   });
-//   socket.on("disconnect", () => {
-//     console.log(`User disconnected: ${socket.user.id}`);
-//   });
-// });
-
-
-
 io.on("connection", (socket) => {
-  const token = socket.handshake.auth.token;
-
-  if (!token) {
-    console.log("User connected: no token");
-    socket.disconnect();
-    return;
-  }
-
-  try {
-    const user = jwt.verify(token, process.env.JWT_SECRET);
-    if (!user.id || !user.role) {
-      throw new Error("Invalid token: missing id or role");
-    }
-    socket.user = user; // Store user for disconnect
-    console.log(`User connected: ${user.id} (${user.role})`);
-
-    const room = `${user.role}:${user.employer_id || user.jobSeeker_id || user.id}`;
+  console.log(`User connected: ${socket.user.id} (${socket.user.role})`);
+  socket.on("join", (room) => {
     socket.join(room);
-    console.log(`User ${user.id} joined room ${room}`);
-
-    socket.on("disconnect", () => {
-      console.log(`User disconnected: ${user.id}`);
-    });
-  } catch (err) {
-    console.error("Socket auth error:", err);
-    socket.disconnect();
-  }
+    console.log(`User ${socket.user.id} joined room ${room}`);
+  });
+  socket.on("disconnect", () => {
+    console.log(`User disconnected: ${socket.user.id}`);
+  });
 });
+
 
  
 app.use((req, res, next) => {
