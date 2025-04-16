@@ -4,11 +4,7 @@ import axios from "axios";
 import BASE_URL from "../../API";
 import Button from "../Button";
 
-const getDriveImageUrl = (url) => {
-  if (!url || !url.includes("drive.google.com")) return null;
-  const fileIdMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  return fileIdMatch ? `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}` : null;
-};
+ 
 
 const JobSeekerProfile = () => {
   const [userProfile, setUserProfile] = useState({});
@@ -40,6 +36,14 @@ const JobSeekerProfile = () => {
    const jobSeekerId = localStorage.getItem("user_Id");
   const authToken = localStorage.getItem("authToken");
   
+
+  const getDriveImageUrl = (url) => {
+    if (!url || !url.includes("drive.google.com")) return null;
+    const fileIdMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    return fileIdMatch ? `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}` : null;
+  };
+
+
   useEffect(() => {
     if (!authToken || !jobSeekerId) {
       alert("You are not logged in. Redirecting to login page...");
@@ -449,17 +453,16 @@ const JobSeekerProfile = () => {
                   /> */}
 
 
-
-
-                      <img
+                    <img
                     src={getDriveImageUrl(profile.profile) || "/default-profile.jpg"}
                     alt="Profile Picture"
                     className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-2 border-teal-200 shadow-md"
                     onError={(e) => {
-                      console.warn("JobSeekerProfile - Image load error:", profile.profile);
-                      e.target.src = "/default-profile.jpg";
+                    console.warn("JobSeekerProfile - Image load error:", profile.profile);
+                    e.target.src = "/default-profile.jpg";
                     }}
-                  />
+                    />
+
                   <div className="flex-1 space-y-4">
                     <div>
                       <span className="text-sm font-medium text-gray-500">Full Name</span>
