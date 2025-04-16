@@ -27,12 +27,31 @@ export const EmpSidebar = ({ onSetActiveContent, activeContent }) => {
   const [messageCount, setMessageCount] = useState(0);
   const [interviewCount, setInterviewCount] = useState(0);
   const [applicationCount, setApplicationCount] = useState(0);
+  const [userProfile, setUserProfile] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const authToken = localStorage.getItem('authToken');
   const employerId = localStorage.getItem('employer_id');
-  //const userRole = 'employer';
-  const userRole = localStorage.getItem('role') || 'employer';
+   const userRole = localStorage.getItem('role') || 'employer';
+
+
+
+
+
+   const getDriveImageUrl = (url) => {
+
+    if (!url || !url.includes("drive.google.com")) return null;
+
+    // Extract file ID from different Google Drive URL formats
+    const fileId = url.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]+)/)?.[1];
+    if (!fileId) return null;
+  
+    // Use Google's thumbnail proxy (works in <img> tags)
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+  };
+
+  
+ 
 
   // WebSocket setup
   useEffect(() => {
@@ -94,6 +113,39 @@ export const EmpSidebar = ({ onSetActiveContent, activeContent }) => {
 
     return () => socket.disconnect();
   }, [authToken, employerId, userRole, onSetActiveContent]);
+
+
+
+
+
+
+
+ 
+
+  useEffect(() => {
+        axios
+      .get(`${BASE_URL}/profile/employer_profile`, {
+        params: { user_id: employerId },
+        headers: { Authorization: `Bearer ${authToken}` },
+      })
+      .then((response) => {
+        const data = response.data;
+        setUserProfile(data);
+    
+        localStorage.setItem("companyLogo", data.logo || "");
+       })
+      .catch((error) => {
+        console.error("Error fetching employer profile:", error);
+        setError("Failed to load profile. Please try again.");
+       });
+  }, [employerId, authToken]);
+
+
+
+
+
+
+
 
   // Fetch initial counts
   useEffect(() => {
@@ -252,11 +304,18 @@ export const EmpSidebar = ({ onSetActiveContent, activeContent }) => {
         {companyLogo && (
           <div className="flex flex-col items-center mb-8">
             <div className="relative flex justify-center items-center w-full max-w-xs">
-              <img
+              {/* <img
                 src={`${BASE_URL}${companyLogo}`}
                 alt="Company Logo"
                 className="w-20 h-20 rounded-full border-2 border-teal-100 object-cover hover:scale-105 transition-transform duration-300 shadow-md"
-              />
+              /> */}
+          <img
+            src={getDriveImageUrl(userProfile.companyLogo) || "/default-profile.jpg"}
+            alt="companyLogo"
+            className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-teal-200 shadow-md"
+            onError={(e) => (e.target.src = "/default-profile.jpg")}  
+          />
+
               <button
                 onClick={handleEditProfile}
                 className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full hover:bg-teal-50 transition-colors duration-300"

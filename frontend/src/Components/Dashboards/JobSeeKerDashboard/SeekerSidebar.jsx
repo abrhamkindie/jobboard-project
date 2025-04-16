@@ -15,6 +15,8 @@
    const [showAlerts, setShowAlerts] = useState(false);
    const [messageCount, setMessageCount] = useState(0);
    const [error, setError] = useState(null);
+    
+
    const authToken = localStorage.getItem('authToken');
    const userId = localStorage.getItem('user_Id');
    const userRole = localStorage.getItem('role');
