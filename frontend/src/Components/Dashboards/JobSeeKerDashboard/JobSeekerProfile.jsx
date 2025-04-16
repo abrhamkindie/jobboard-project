@@ -436,7 +436,7 @@ const JobSeekerProfile = () => {
                 <h2 className="text-xl font-semibold text-teal-600 mb-4">Profile Overview</h2>
                 <div className="flex items-start gap-8">
                   <img
-                    src={profile.profile ? `${profile.profile}` : "/default-profile.jpg"}
+                    src={profile.profile}
                     alt="Profile Picture"
                     className="w-28 h-28 rounded-full object-cover border-2 border-teal-200 shadow-md"
                     onError={(e) => (e.target.src = "/default-profile.jpg")}
