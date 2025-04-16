@@ -2172,8 +2172,8 @@ exports.confirmInterview = async (req, res) => {
 
   try {
     const [result] = await req.db.query(
-      'UPDATE interviews SET status = ? WHERE id = ? AND jobseeker_id = ? AND status = "Scheduled"',
-      [response, interview_id, jobSeeker_id]
+      'UPDATE interviews SET status = ? WHERE id = ? AND jobseeker_id = ? AND status = ?',
+      [response, interview_id, jobSeeker_id,"Scheduled"]
     );
 
     if (result.affectedRows === 0) {
