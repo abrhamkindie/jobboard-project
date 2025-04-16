@@ -216,29 +216,44 @@ const io = new Server(server, {
   },
 });
 
-io.use((socket, next) => {
+// io.use((socket, next) => {
+//   const token = socket.handshake.auth.token;
+//   if (!token) return next(new Error("Authentication error"));
+//   try {
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     socket.user = decoded;
+//     next();
+//   } catch (err) {
+//     next(new Error("Invalid token"));
+//   }
+// });
+
+ 
+io.use(async (socket, next) => {
   const token = socket.handshake.auth.token;
-  if (!token) return next(new Error("Authentication error"));
+  console.log("Socket.IO - Incoming token:", token ? "Present" : "Missing");
+
+  if (!token) {
+    console.error("Socket.IO - No token provided");
+    return next(new Error("Authentication error: No token provided"));
+  }
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("Socket.IO - Decoded token:", decoded);
+
+    if (!decoded.id || !decoded.role) {
+      console.error("Socket.IO - Invalid token: missing id or role", { decoded });
+      return next(new Error("Invalid token: missing id or role"));
+    }
+
     socket.user = decoded;
     next();
   } catch (err) {
-    next(new Error("Invalid token"));
+    console.error("Socket.IO - Token verification error:", err.message);
+    return next(new Error("Invalid token: " + err.message));
   }
 });
-
-// io.on("connection", (socket) => {
-//   console.log(`User connected: ${socket.user.id} (${socket.user.role})`);
-//   socket.on("join", (room) => {
-//     socket.join(room);
-//     console.log(`User ${socket.user.id} joined room ${room}`);
-//   });
-//   socket.on("disconnect", () => {
-//     console.log(`User disconnected: ${socket.user.id}`);
-//   });
-// });
-
 
 
 io.on("connection", (socket) => {
