@@ -293,11 +293,7 @@ export const EmpSidebar = ({ onSetActiveContent, activeContent }) => {
         {companyLogo && (
           <div className="flex flex-col items-center mb-8">
             <div className="relative flex justify-center items-center w-full max-w-xs">
-              {/* <img
-                src={`${BASE_URL}${companyLogo}`}
-                alt="Company Logo"
-                className="w-20 h-20 rounded-full border-2 border-teal-100 object-cover hover:scale-105 transition-transform duration-300 shadow-md"
-              /> */}
+             
           <img
             src={getDriveImageUrl(userProfile.logo) || "/default-profile.jpg"}
             alt="companyLogo"
@@ -326,7 +322,7 @@ export const EmpSidebar = ({ onSetActiveContent, activeContent }) => {
                 </svg>
               </button>
             </div>
-            <h1 className="text-gray-900 font-semibold text-lg mt-4 text-center">{companyName}</h1>
+            <h1 className="text-gray-900 font-semibold text-lg mt-4 text-center">{userProfile.company_name}</h1>
           </div>
         )}
         {error && (
