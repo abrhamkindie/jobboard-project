@@ -216,129 +216,67 @@ const io = new Server(server, {
   },
 });
 
-// io.use((socket, next) => {
-//   const token = socket.handshake.auth.token;
-//   if (!token) return next(new Error("Authentication error"));
-//   try {
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-//     socket.user = decoded;
-//     next();
-//   } catch (err) {
-//     next(new Error("Invalid token"));
-//   }
-// });
-
- 
- 
-
- 
-
- 
-// app.use((req, res, next) => {
-//   req.db = db;
-//   req.io = io;
-//   next();
-// });
-
-
-io.use(async (socket, next) => {
+io.use((socket, next) => {
   const token = socket.handshake.auth.token;
-  console.log("Socket.IO - Incoming token:", token ? "Present" : "Missing");
-
-  if (!token) {
-    console.error("Socket.IO - No token provided");
-    return next(new Error("Authentication error: No token provided"));
-  }
-
+  if (!token) return next(new Error("Authentication error"));
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("Socket.IO - Decoded token:", decoded);
-
-    // Check for id, employer_id, or jobSeeker_id, and role
-    if (!decoded.role || (!decoded.id && !decoded.employer_id && !decoded.jobSeeker_id)) {
-      console.error("Socket.IO - Invalid token: missing user identifier or role", { decoded });
-      return next(new Error("Invalid token: missing user identifier or role"));
-    }
-
-    // Normalize user data
-    socket.user = {
-      id: decoded.id || decoded.employer_id || decoded.jobSeeker_id,
-      role: decoded.role,
-      employer_id: decoded.employer_id || null,
-      jobSeeker_id: decoded.jobSeeker_id || null,
-    };
-    console.log("Socket.IO - Authenticated user:", socket.user);
+    socket.user = decoded;
     next();
   } catch (err) {
-    console.error("Socket.IO - Token verification error:", err.message);
-    return next(new Error("Invalid token: " + err.message));
+    next(new Error("Invalid token"));
   }
 });
 
-// Socket.IO Connection Handler
+// io.on("connection", (socket) => {
+//   console.log(`User connected: ${socket.user.id} (${socket.user.role})`);
+//   socket.on("join", (room) => {
+//     socket.join(room);
+//     console.log(`User ${socket.user.id} joined room ${room}`);
+//   });
+//   socket.on("disconnect", () => {
+//     console.log(`User disconnected: ${socket.user.id}`);
+//   });
+// });
+
+
+
 io.on("connection", (socket) => {
-  console.log("Socket.IO - User connected:", socket.user.id, socket.user.role);
+  const token = socket.handshake.auth.token;
 
-  socket.join(`user:${socket.user.id}`);
+  if (!token) {
+    console.log("User connected: no token");
+    socket.disconnect();
+    return;
+  }
 
-  socket.on("disconnect", () => {
-    console.log("Socket.IO - User disconnected:", socket.user.id);
-  });
-
-  // Handle real-time messages
-  socket.on("sendMessage", async (data) => {
-    try {
-      const { recipientId, content, jobId } = data;
-      const senderId = socket.user.id;
-
-      const pool = await connectDB();
-      const [result] = await pool.query(
-        "INSERT INTO messages (sender_id, recipient_id, job_id, content) VALUES (?, ?, ?, ?)",
-        [senderId, recipientId, jobId || null, content]
-      );
-
-      const message = {
-        id: result.insertId,
-        sender_id: senderId,
-        recipient_id: recipientId,
-        job_id: jobId || null,
-        content,
-        sent_at: new Date(),
-      };
-
-      io.to(`user:${recipientId}`).emit("receiveMessage", message);
-      socket.emit("messageSent", message);
-    } catch (err) {
-      console.error("Socket.IO - Send message error:", err);
-      socket.emit("error", { message: "Failed to send message" });
-    }
-  });
-});
-
-
-
-
-
-
-app.use(async (req, res, next) => {
   try {
-    req.db = await connectDB();
-    next();
+    const user = jwt.verify(token, process.env.JWT_SECRET);
+    if (!user.id || !user.role) {
+      throw new Error("Invalid token: missing id or role");
+    }
+    socket.user = user; // Store user for disconnect
+    console.log(`User connected: ${user.id} (${user.role})`);
+
+    const room = `${user.role}:${user.employer_id || user.jobSeeker_id || user.id}`;
+    socket.join(room);
+    console.log(`User ${user.id} joined room ${room}`);
+
+    socket.on("disconnect", () => {
+      console.log(`User disconnected: ${user.id}`);
+    });
   } catch (err) {
-    console.error("Database connection error:", err);
-    res.status(500).json({ error: "Database connection failed" });
+    console.error("Socket auth error:", err);
+    socket.disconnect();
   }
 });
 
-// Error handling
-app.use((err, req, res, next) => {
-  console.error("Express error:", err.stack);
-  res.status(500).json({ error: "Something went wrong!" });
+ 
+app.use((req, res, next) => {
+  req.db = db;
+  req.io = io;
+  next();
 });
-
-
-
-
 
 app.use("/upload", uploadRoutes);
 app.use("/profile", profileRoutes);
