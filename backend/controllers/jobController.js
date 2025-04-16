@@ -1657,6 +1657,7 @@ exports.applyJob = async (req, res) => {
        }
     });
   }
+  console.log("req.user",req.user);
 
   if (!req.user || req.user.jobSeeker_id !== parseInt(jobSeeker_id) || req.user.role !== "seeker") {
     return res.status(403).json({ error: "Unauthorized: Valid seeker authentication required" });
