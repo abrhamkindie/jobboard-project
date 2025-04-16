@@ -45,7 +45,7 @@ export default function Header() {
 
     const endpoint = role === "seeker" ? "employer_profile" : "seeker_profile";
     axios
-  .get(`${BASE_URL}/profile/ ${endpoint}`, {
+  .get(`${BASE_URL}/profile/${endpoint}`,{
     params: { user_id: role === "seeker" ? userId :employerId },
     headers: { Authorization: `Bearer ${token}` },
   })
@@ -53,7 +53,7 @@ export default function Header() {
     const data = response.data;
     setUserProfile(data);
 
-    localStorage.setItem("companyLogo", data.logo || "");
+    localStorage.setItem("companyLogo", role === "seeker" ? data.profile  : data.logo  || "");
    })
   .catch((error) => {
     console.error("Error fetching employer profile:", error);
