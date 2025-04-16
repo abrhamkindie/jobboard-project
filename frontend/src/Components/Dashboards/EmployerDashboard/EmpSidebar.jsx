@@ -21,8 +21,8 @@ import {
 import BASE_URL from '../../API';
 
 export const EmpSidebar = ({ onSetActiveContent, activeContent }) => {
-  const [companyName, setCompanyName] = useState('');
-  const [companyLogo, setCompanyLogo] = useState(null);
+  // const [companyName, setCompanyName] = useState('');
+  // const [companyLogo, setCompanyLogo] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [messageCount, setMessageCount] = useState(0);
   const [interviewCount, setInterviewCount] = useState(0);
@@ -138,12 +138,12 @@ export const EmpSidebar = ({ onSetActiveContent, activeContent }) => {
 
   // Fetch initial counts
   useEffect(() => {
-    const company_Name = localStorage.getItem('name');
-    const companyLogo = localStorage.getItem('companyLogo');
-    if (company_Name) {
-      setCompanyName(company_Name);
-      setCompanyLogo(companyLogo);
-    }
+    // const company_Name = localStorage.getItem('name');
+    // const companyLogo = localStorage.getItem('companyLogo');
+    // if (company_Name) {
+    //   setCompanyName(company_Name);
+    //   setCompanyLogo(companyLogo);
+    // }
 
     const fetchInitialData = async () => {
       if (!authToken) {
@@ -290,7 +290,7 @@ export const EmpSidebar = ({ onSetActiveContent, activeContent }) => {
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:translate-x-0 z-0 shadow-sm`}
       >
-        {companyLogo && (
+        {userProfile.logo && (
           <div className="flex flex-col items-center mb-8">
             <div className="relative flex justify-center items-center w-full max-w-xs">
              
