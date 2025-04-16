@@ -1665,6 +1665,7 @@ exports.applyJob = async (req, res) => {
     });
   }
   
+  console.log("request form req.user",req.user);
   
   const applicationData = {
     job_id,
