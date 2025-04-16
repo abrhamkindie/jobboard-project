@@ -4,6 +4,12 @@ import axios from "axios";
 import BASE_URL from "../../API";
 import Button from "../Button";
 
+const getDriveImageUrl = (url) => {
+  if (!url || !url.includes("drive.google.com")) return null;
+  const fileIdMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return fileIdMatch ? `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}` : null;
+};
+
 const JobSeekerProfile = () => {
   const [userProfile, setUserProfile] = useState({});
   const [profile, setProfile] = useState({
@@ -435,11 +441,24 @@ const JobSeekerProfile = () => {
               <section className="border-b border-gray-200 pb-8">
                 <h2 className="text-xl font-semibold text-teal-600 mb-4">Profile Overview</h2>
                 <div className="flex items-start gap-8">
-                  <img
-                    src={profile.profile}
+                  {/* <img
+                    src={profile.profile ? `${BASE_URL}${profile.profile}` : "/default-profile.jpg"}
                     alt="Profile Picture"
                     className="w-28 h-28 rounded-full object-cover border-2 border-teal-200 shadow-md"
                     onError={(e) => (e.target.src = "/default-profile.jpg")}
+                  /> */}
+
+
+
+
+                      <img
+                    src={getDriveImageUrl(profile.profile) || "/default-profile.jpg"}
+                    alt="Profile Picture"
+                    className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-2 border-teal-200 shadow-md"
+                    onError={(e) => {
+                      console.warn("JobSeekerProfile - Image load error:", profile.profile);
+                      e.target.src = "/default-profile.jpg";
+                    }}
                   />
                   <div className="flex-1 space-y-4">
                     <div>

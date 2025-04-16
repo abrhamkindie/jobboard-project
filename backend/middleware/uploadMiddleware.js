@@ -80,7 +80,7 @@ const upload = multer({
 });
 
 const uploadMiddleware = async (req, res, next) => {
-  console.log("Multer Incoming Request - Body:", req.body);
+  console.log("uploadMiddleware - Incoming Request - Body:", req.body);
   upload.fields([
     { name: "profile", maxCount: 1 },
     { name: "resume", maxCount: 1 },
@@ -88,27 +88,27 @@ const uploadMiddleware = async (req, res, next) => {
     { name: "document", maxCount: 1 },
   ])(req, res, async (err) => {
     if (err instanceof multer.MulterError) {
-      console.error("MulterError:", err);
+      console.error("uploadMiddleware - MulterError:", err);
       return res.status(400).json({ error: "File upload error", details: err.message });
     } else if (err) {
-      console.error("Upload Error:", err);
+      console.error("uploadMiddleware - Upload Error:", err.message);
       return res.status(400).json({ error: err.message });
     }
     req.files = req.files || {};
     try {
       for (const field in req.files) {
         const file = req.files[field][0];
-        req.files[field][0].path = await uploadToDrive(file, field);
+        req.files[field][0].url = await uploadToDrive(file, field); // Changed .path to .url
+        console.log(`uploadMiddleware - Uploaded ${field}:`, req.files[field][0].url);
       }
-      console.log("Uploaded Files:", req.files);
+      console.log("uploadMiddleware - All files processed:", req.files);
       next();
     } catch (err) {
-      console.error("Drive Upload Error:", err);
+      console.error("uploadMiddleware - Drive Upload Error:", err);
       res.status(500).json({ error: "Failed to upload to Drive", details: err.message });
     }
   });
 };
-
 
 const uploadResume = (req, res, next) => {
   console.log("uploadResume - Incoming Request - Body:", req.body);
