@@ -48,6 +48,7 @@ const JobSeekerProfile = () => {
       })
       .then((response) => {
         const data = response.data;
+        console.log("user profile on the seekers sidebar",profile.profile);
         setUserProfile(data);
         setProfile({
           full_name: data.full_name || "",
