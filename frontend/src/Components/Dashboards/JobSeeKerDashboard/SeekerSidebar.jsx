@@ -183,11 +183,11 @@
          {user.picture && (
            <div className="flex flex-col items-center mb-8">
              <div className="relative flex justify-center items-center w-full max-w-xs">
-               {/* <img
+               <img
                  src={`${BASE_URL}${user.picture}`}
                  alt="Profile"
                  className="w-20 h-20 rounded-full border-2 border-teal-100 object-cover hover:scale-105 transition-transform duration-300 shadow-md"
-               /> */}
+               />
                <button onClick={handleEditProfile} className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full hover:bg-teal-50">
                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-teal-600 hover:text-teal-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
