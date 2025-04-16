@@ -32,6 +32,8 @@ const JobSeekerProfile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+
+ 
   const navigate = useNavigate();
    const jobSeekerId = localStorage.getItem("user_Id");
   const authToken = localStorage.getItem("authToken");
@@ -42,7 +44,6 @@ const JobSeekerProfile = () => {
     const fileIdMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
     return fileIdMatch ? `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}` : null;
   };
-
 
   useEffect(() => {
     if (!authToken || !jobSeekerId) {
@@ -164,7 +165,10 @@ const JobSeekerProfile = () => {
     setResumeFile(null);
   };
 
-  if (loading) {
+
+
+
+   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-gray-600 text-lg">Loading profile...</p>
@@ -445,14 +449,6 @@ const JobSeekerProfile = () => {
               <section className="border-b border-gray-200 pb-8">
                 <h2 className="text-xl font-semibold text-teal-600 mb-4">Profile Overview</h2>
                 <div className="flex items-start gap-8">
-                  {/* <img
-                    src={profile.profile ? `${BASE_URL}${profile.profile}` : "/default-profile.jpg"}
-                    alt="Profile Picture"
-                    className="w-28 h-28 rounded-full object-cover border-2 border-teal-200 shadow-md"
-                    onError={(e) => (e.target.src = "/default-profile.jpg")}
-                  /> */}
-
-
                     <img
                     src={getDriveImageUrl(profile.profile) || "/default-profile.jpg"}
                     alt="Profile Picture"
@@ -462,7 +458,10 @@ const JobSeekerProfile = () => {
                     e.target.src = "/default-profile.jpg";
                     }}
                     />
+                <p className="">
+                getDriveImageUrl   {getDriveImageUrl(profile.profile)};
 
+                </p>
                   <div className="flex-1 space-y-4">
                     <div>
                       <span className="text-sm font-medium text-gray-500">Full Name</span>
