@@ -32,6 +32,22 @@ const EmployerProfile = () => {
   const employerId = localStorage.getItem("employer_id"); // Adjust based on your auth setup
   const authToken = localStorage.getItem("authToken");
 
+
+  const getDriveImageUrl = (url) => {
+
+    if (!url || !url.includes("drive.google.com")) return null;
+
+    // Extract file ID from different Google Drive URL formats
+    const fileId = url.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]+)/)?.[1];
+    if (!fileId) return null;
+  
+    // Use Google's thumbnail proxy (works in <img> tags)
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+  };
+
+ 
+
+
   useEffect(() => {
     if (!authToken || !employerId) {
       alert("You are not logged in. Redirecting to login page...");
@@ -403,12 +419,12 @@ const EmployerProfile = () => {
               <section className="border-b border-gray-200 pb-8">
                 <h2 className="text-xl font-semibold text-teal-600 mb-4">Profile Overview</h2>
                 <div className="flex items-start gap-8">
-                  <img
-                    src={profile.logo ? `${BASE_URL}${profile.logo}` : "/default-logo.jpg"}
-                    alt="Company Logo"
-                    className="w-28 h-28 rounded-full object-cover border-2 border-teal-200 shadow-md"
-                    onError={(e) => (e.target.src = "/default-logo.jpg")}
-                  />
+                <img
+  src={getDriveImageUrl(profile.profile) || "/default-profile.jpg"}
+  alt="Profile"
+  className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-2 border-teal-200 shadow-md"
+  onError={(e) => (e.target.src = "/default-profile.jpg")}  
+/>
                   <div className="flex-1 space-y-4">
                     <div>
                       <span className="text-sm font-medium text-gray-500">Contact Name</span>

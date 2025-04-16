@@ -41,11 +41,6 @@ const JobSeekerProfile = () => {
 
   const getDriveImageUrl = (url) => {
 
-
-    // if (!url || !url.includes("drive.google.com")) return null;
-    // const fileIdMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    // return fileIdMatch ? `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}` : null;
-
     if (!url || !url.includes("drive.google.com")) return null;
 
     // Extract file ID from different Google Drive URL formats
@@ -55,6 +50,7 @@ const JobSeekerProfile = () => {
     // Use Google's thumbnail proxy (works in <img> tags)
     return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
   };
+  
 
   useEffect(() => {
     if (!authToken || !jobSeekerId) {
@@ -459,24 +455,14 @@ const JobSeekerProfile = () => {
               {/* Profile Overview */}
               <section className="border-b border-gray-200 pb-8">
                 <h2 className="text-xl font-semibold text-teal-600 mb-4">Profile Overview</h2>
-                <div className="flex items-start gap-8">
-                    {/* <img
-                    src={getDriveImageUrl(profile.profile) }
-                    alt="Profile Picture"
+                <div className="flex items-start gap-8">               
+
+                  <img
+                    src={getDriveImageUrl(profile.profile) || "/default-profile.jpg"}
+                    alt="Profile"
                     className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-2 border-teal-200 shadow-md"
-                    onError={(e) => {
-                    console.warn("JobSeekerProfile - Image load error:", profile.profile);
-                    e.target.src = "/default-profile.jpg";
-                    }}
-                    /> */}
-
-
-<img
-  src={getDriveImageUrl(profile.profile) || "/default-profile.jpg"}
-  alt="Profile"
-  className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-2 border-teal-200 shadow-md"
-  onError={(e) => (e.target.src = "/default-profile.jpg")}  
-/>
+                    onError={(e) => (e.target.src = "/default-profile.jpg")}  
+                  />
                
                   <div className="flex-1 space-y-4">
                     <div>
