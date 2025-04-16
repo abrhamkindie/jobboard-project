@@ -48,8 +48,7 @@ const JobSeekerProfile = () => {
       })
       .then((response) => {
         const data = response.data;
-        console.log("user profile on the seekers sidebar",profile.profile);
-        setUserProfile(data);
+         setUserProfile(data);
         setProfile({
           full_name: data.full_name || "",
           email: data.email || "",
@@ -68,6 +67,7 @@ const JobSeekerProfile = () => {
           github: data.github || "",
           availability: data.availability || "",
         });
+        console.log("user profile on the seekers sidebar",profile.profile);
         localStorage.setItem("profile_picture_url", data.profile || "");
         setLoading(false);
       })
