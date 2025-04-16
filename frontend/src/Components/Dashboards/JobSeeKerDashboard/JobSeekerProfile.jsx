@@ -466,12 +466,6 @@ const JobSeekerProfile = () => {
                         {userProfile.full_name || "Not set"}
                       </p>
                     </div>
-
-
-                    <p className="">
-                getDriveImageUrl   {getDriveImageUrl(profile.profile) ? getDriveImageUrl(profile.profile):"nop"};
-
-                </p>
                     <div>
                       <span className="text-sm font-medium text-gray-500">Desired Job Title</span>
                       <p className="text-lg font-semibold text-gray-800">
