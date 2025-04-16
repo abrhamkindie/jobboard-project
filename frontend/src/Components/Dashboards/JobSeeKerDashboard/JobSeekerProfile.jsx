@@ -459,7 +459,7 @@ const JobSeekerProfile = () => {
                     }}
                     />
                 <p className="">
-                getDriveImageUrl   {getDriveImageUrl(profile.profile)};
+                getDriveImageUrl   {getDriveImageUrl(profile.profile) ? getDriveImageUrl(profile.profile):"nop"};
 
                 </p>
                   <div className="flex-1 space-y-4">
