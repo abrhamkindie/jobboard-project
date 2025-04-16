@@ -480,7 +480,8 @@ exports.updateUserProfile = async (req, res) => {
 
     res.json({
       message: "Profile updated successfully",
-      profile: seeker,
+      profile: seeker.profile, // Change from seeker to seeker.profile
+      resume: seeker.resume,
     });
   } catch (err) {
     console.error("updateUserProfile - Error:", err);
