@@ -25,6 +25,8 @@ export const BrowseJobs = () => {
   const [savedJobs, setSavedJobs] = useState([]);
   const [showApplicationModal, setShowApplicationModal] = useState(false);
   const [appliedJobs, setAppliedJobs] = useState([]);
+ // const [userProfile, setUserProfile] = useState({});
+  
   const jobsPerPage = 12;
   const navigate = useNavigate();
   const modal = useRef();
@@ -32,6 +34,21 @@ export const BrowseJobs = () => {
   const role = localStorage.getItem("role");
   const userId = localStorage.getItem("user_Id");
   const authToken = localStorage.getItem("authToken");
+  
+  const getDriveImageUrl = (url) => {
+
+    if (!url || !url.includes("drive.google.com")) return null;
+
+    // Extract file ID from different Google Drive URL formats
+    const fileId = url.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]+)/)?.[1];
+    if (!fileId) return null;
+  
+    // Use Google's thumbnail proxy (works in <img> tags)
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+  };
+
+   
+
 
   useEffect(() => {
     const savedFilters = JSON.parse(localStorage.getItem('searchFilters'));
@@ -68,6 +85,7 @@ export const BrowseJobs = () => {
       .then((response) => {
         if (Array.isArray(response.data) && response.data.length === 2) {
           setJobList(response.data[0]);  
+          // setUserProfile(response.data[0].company_logo);
           setTotalPages(response.data[1]?.totalPages || 1);
         } else {
           console.error("Unexpected API response format:", response.data);
@@ -416,11 +434,36 @@ export const BrowseJobs = () => {
                       {/* Job Title and Company Info */}
                       <div className="flex items-center gap-3 mb-3">
                         <div className="flex justify-center">
-                          <img
+
+
+
+
+
+                    <img
+                    src={getDriveImageUrl(job.company_logo) || "/default-profile.jpg"}
+                    alt="companyLogo"
+                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-teal-200 shadow-md"
+                    onError={(e) => (e.target.src = "/default-profile.jpg")}  
+                    />
+
+
+
+                          {/* <img
                             src={job.company_logo || "/default-logo.png"}
                             alt={job.company_name}
                             className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-teal-100 cursor-pointer"
-                          />
+                          /> */}
+
+
+
+
+
+
+
+
+
+
+
                         </div>
                         <div className="flex-1">
                           <h3 className="text-teal-700 text-sm font-semibold">
