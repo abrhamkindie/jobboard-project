@@ -1,303 +1,4 @@
-// const {insertIntoDatabase}=require('../utils/helpers')
-// const  Base_Url  = require('../config/Base_Url');
-// const fs = require('fs'); // Add this to interact with the file system
-// const path = require('path'); // Add this to handle file paths
-
-
-
- 
-// // Get a single job seeker's profile
-// exports.getJobSeekerInfo = (req, res) => {
-//   const user_id = req.query.user_id;  
-
-//   if (!user_id) {
-//     return res.status(400).json({ error: 'User ID is required' });
-//   }
-
-//   req.db.query('SELECT * FROM seekers WHERE id = ?', [user_id], (err, results) => {
-//     if (err) {
-//       console.error('Error fetching JobSeeker info:', err);
-//       return res.status(500).json({ error: 'Database error', details: err.message });
-//     }
-    
-//     if (results.length === 0) {
-//       return res.status(404).json({ error: 'Job seeker not found' });
-//     }
-    
-//     res.status(200).json(results[0]);
-//   });
-// };
-
-
- 
-
-// exports.updateUserProfile = (req, res) => {
- 
-
-//   const profilePath = req.files && req.files.profile ? `/uploads/${req.files.profile[0].filename}` : null;
-//   const resumePath = req.files && req.files.resume ? `/uploads/${req.files.resume[0].filename}` : null;
- 
-
-//   const {
-//     full_name,
-//     email,
-//     phone,
-//     job_title,
-//     skills,
-//     experience_level,
-//     location_preference,
-//     education,
-//     work_experience,
-//     bio,
-//     certifications,
-//     linkedin,
-//     github,
-//     availability,
-//     job_seeker_id,
-//   } = req.body;
-
- 
-//   if (!job_seeker_id) {
-//     console.log('Missing job_seeker_id');
-//     return res.status(400).json({ error: 'job_seeker_id is required' });
-//   }
-
-//   // Fetch current profile and resume paths
-//   const selectQuery = 'SELECT profile, resume FROM  seekers WHERE  id = ?';
-//   req.db.query(selectQuery, [job_seeker_id], (selectErr, selectResult) => {
-//     if (selectErr) {
-//       console.error('Error fetching current profile:', selectErr);
-//       return res.status(500).json({ error: 'Error fetching current profile', details: selectErr.message });
-//     }
-
-//     const currentProfile = selectResult[0]?.profile;
-//     const currentResume = selectResult[0]?.resume;
- 
-
-//     const update = `
-//       UPDATE  seekers 
-//       SET 
-//         full_name = ?, 
-//         email = ?, 
-//         phone = ?, 
-//         job_title = ?, 
-//         skills = ?, 
-//         experience_level = ?, 
-//         location_preference = ?, 
-//         resume = ?, 
-//         profile = ?,
-//         education = ?,
-//         work_experience = ?,
-//         bio = ?,
-//         certifications = ?,
-//         linkedin = ?,
-//         github = ?,
-//         availability = ?
-//       WHERE  id = ?`;
-
-//     const values = [
-//       full_name || null,
-//       email || null,
-//       phone || null,
-//       job_title || null,
-//       skills || null,
-//       experience_level || null,
-//       location_preference || null,
-//       resumePath || currentResume,
-//       profilePath || currentProfile,
-//       education || null,
-//       work_experience || null,
-//       bio || null,
-//       certifications || null,
-//       linkedin || null,
-//       github || null,
-//       availability || null,
-//       job_seeker_id,
-//     ];
-
- 
-//     req.db.query(update, values, (err, response) => {
-//       if (err) {
-//         console.error('Error updating job seeker profile:', err);
-//         return res.status(500).json({ 
-//           error: 'Error updating job seeker profile', 
-//           details: err.message 
-//         });
-//       }
-//       console.log('Query Response:', response);
-//       if (response.affectedRows === 0) {
-//         console.log('No rows updated - job_seeker_id not found');
-//         return res.status(404).json({ error: 'Job seeker not found' });
-//       }
-
-//       // Delete old files if new ones were uploaded
-//       if (profilePath && currentProfile && currentProfile !== profilePath) {
-//         const oldProfilePath = path.join(__dirname, '..', currentProfile);
-//         fs.unlink(oldProfilePath, (unlinkErr) => {
-//           if (unlinkErr) console.error('Error deleting old profile picture:', unlinkErr);
-//           else console.log(`Deleted old profile picture: ${oldProfilePath}`);
-//         });
-//       }
-//       if (resumePath && currentResume && currentResume !== resumePath) {
-//         const oldResumePath = path.join(__dirname, '..', currentResume);
-//         fs.unlink(oldResumePath, (unlinkErr) => {
-//           if (unlinkErr) console.error('Error deleting old resume:', unlinkErr);
-//           else console.log(`Deleted old resume: ${oldResumePath}`);
-//         });
-//       }
-
-//       res.json({ 
-//         message: 'Profile updated successfully',
-//         profile: profilePath || currentProfile,
-//         resume: resumePath || currentResume,
-//         affectedRows: response.affectedRows 
-//       });
-//     });
-//   });
-// };
-
-
-
-// // Get a single employer`s profile
-// exports.getEmployerInfo = (req, res) => {
-//   const user_id = req.query.user_id;  
-
-//   if (!user_id) {
-//     return res.status(400).json({ error: 'User ID is required' });
-//   }
-
-//   req.db.query('SELECT * FROM employers WHERE employer_id = ?', [user_id], (err, results) => {
-//     if (err) {
-//       console.error('Error fetching employer info:', err);
-//       return res.status(500).json({ error: 'Database error', details: err.message });
-//     }
-    
-//     if (results.length === 0) {
-//       return res.status(404).json({ error: 'employer not found' });
-//     }
-    
-//     res.status(200).json(results[0]);
-//   });
-// };
-
- 
-// exports.updateEmployerProfile = (req, res) => {
-//   console.log('Request Body:', req.body);
-//   console.log('Request Files:', req.files);
-
-//   const logoPath = req.files && req.files.logo ? `/uploads/${req.files.logo[0].filename}` : null;
-//   console.log('Logo Path:', logoPath);
-
-//   const {
-//     full_name,
-//     email,
-//     phone,
-//     company_name,
-//     industry,
-//     company_size,
-//     job_description,
-//     company_website,
-//     company_description,
-//     founded_year,
-//     location,
-//     linkedin,
-//     twitter,
-//     employee_benefits,
-//     employer_id,
-//   } = req.body;
-
-//   console.log('Extracted employer_id:', employer_id);
-
-//   if (!employer_id) {
-//     console.log('Missing employer_id');
-//     return res.status(400).json({ error: 'employer_id is required' });
-//   }
-
-//   // Fetch current logo path
-//   const selectQuery = 'SELECT logo FROM employers WHERE employer_id = ?';
-//   req.db.query(selectQuery, [employer_id], (selectErr, selectResult) => {
-//     if (selectErr) {
-//       console.error('Error fetching current profile:', selectErr);
-//       return res.status(500).json({ error: 'Error fetching current profile', details: selectErr.message });
-//     }
-
-//     const currentLogo = selectResult[0]?.logo;
-//     console.log('Current Logo:', currentLogo);
-
-//     const update = `
-//       UPDATE employers 
-//       SET 
-//         full_name = ?, 
-//         email = ?, 
-//         phone = ?, 
-//         company_name = ?, 
-//         industry = ?, 
-//         company_size = ?, 
-//         job_description = ?, 
-//         logo = ?,
-//         company_website = ?,
-//         company_description = ?,
-//         founded_year = ?,
-//         location = ?,
-//         linkedin = ?,
-//         twitter = ?,
-//         employee_benefits = ?
-//       WHERE employer_id = ?`;
-
-//     const values = [
-//       full_name || null,
-//       email || null,
-//       phone || null,
-//       company_name || null,
-//       industry || null,
-//       company_size || null,
-//       job_description || null,
-//       logoPath || currentLogo,
-//       company_website || null,
-//       company_description || null,
-//       founded_year || null,
-//       location || null,
-//       linkedin || null,
-//       twitter || null,
-//       employee_benefits || null,
-//       employer_id,
-//     ];
-
-//     console.log('Query Values:', values);
-
-//     req.db.query(update, values, (err, response) => {
-//       if (err) {
-//         console.error('Error updating employer profile:', err);
-//         return res.status(500).json({ 
-//           error: 'Error updating employer profile', 
-//           details: err.message 
-//         });
-//       }
-//       console.log('Query Response:', response);
-//       if (response.affectedRows === 0) {
-//         console.log('No rows updated - employer_id not found');
-//         return res.status(404).json({ error: 'Employer not found' });
-//       }
-
-//       // Delete old logo if a new one was uploaded
-//       if (logoPath && currentLogo && currentLogo !== logoPath) {
-//         const oldLogoPath = path.join(__dirname, '..', currentLogo);
-//         fs.unlink(oldLogoPath, (unlinkErr) => {
-//           if (unlinkErr) console.error('Error deleting old logo:', unlinkErr);
-//           else console.log(`Deleted old logo: ${oldLogoPath}`);
-//         });
-//       }
-
-//       res.json({ 
-//         message: 'Profile updated successfully',
-//         logo: logoPath || currentLogo,
-//         affectedRows: response.affectedRows 
-//       });
-//     });
-//   });
-// };
-
-const { google } = require("googleapis");
+ const { google } = require("googleapis");
 const Base_Url = require("../config/Base_Url");
 
 const auth = new google.auth.GoogleAuth({
@@ -623,5 +324,117 @@ exports.updateEmployerProfile = async (req, res) => {
   } catch (err) {
     console.error("updateEmployerProfile - Error:", err);
     res.status(500).json({ error: "Error updating profile", details: err.message });
+  }
+};
+
+
+
+const pool = require('../config/db');
+
+exports.getSeekerSummary = async (req, res) => {
+  const userId = req.user.id; // From authMiddleware (JWT)
+
+  try {
+    // Total Applications
+    const [totalApps] = await pool.query(
+      'SELECT COUNT(*) AS count FROM job_applications WHERE applicant_id = ?',
+      [userId]
+    );
+
+    // Interviews Scheduled (status = 'Interview')
+    const [interviews] = await pool.query(
+      'SELECT COUNT(*) AS count FROM job_applications WHERE applicant_id = ? AND status = ?',
+      [userId, 'Interview']
+    );
+
+    // Offers Received (status = 'Offered')
+    const [offers] = await pool.query(
+      'SELECT COUNT(*) AS count FROM job_applications WHERE applicant_id = ? AND status = ?',
+      [userId, 'Offered']
+    );
+
+    // Response Rate (non-Submitted applications / total)
+    const [responded] = await pool.query(
+      'SELECT COUNT(*) AS count FROM job_applications WHERE applicant_id = ? AND status != ?',
+      [userId, 'Submitted']
+    );
+    const responseRate = totalApps[0].count > 0
+      ? Math.round((responded[0].count / totalApps[0].count) * 100)
+      : 0;
+
+    // Card-specific data
+    // Application Progress
+    const [underReview] = await pool.query(
+      'SELECT COUNT(*) AS count FROM job_applications WHERE applicant_id = ? AND status = ?',
+      [userId, 'Under Review']
+    );
+    const [awaiting] = await pool.query(
+      'SELECT COUNT(*) AS count FROM job_applications WHERE applicant_id = ? AND status = ?',
+      [userId, 'Submitted']
+    );
+
+    // Interview Pipeline
+    const [upcoming] = await pool.query(
+      'SELECT COUNT(*) AS count FROM job_applications WHERE applicant_id = ? AND status = ? AND interview_date > NOW()',
+      [userId, 'Interview']
+    );
+    const [completed] = await pool.query(
+      'SELECT COUNT(*) AS count FROM job_applications WHERE applicant_id = ? AND status = ? AND interview_date < NOW()',
+      [userId, 'Interview']
+    );
+
+    // Job Offers
+    const [pending] = await pool.query(
+      'SELECT COUNT(*) AS count FROM job_applications WHERE applicant_id = ? AND status = ?',
+      [userId, 'Offered']
+    );
+    const [accepted] = await pool.query(
+      'SELECT COUNT(*) AS count FROM job_applications WHERE applicant_id = ? AND status = ?',
+      [userId, 'Accepted']
+    );
+
+    // Engagement (assumed tables)
+    const [profileViews] = await pool.query(
+      'SELECT profile_views FROM user_profiles WHERE user_id = ?',
+      [userId]
+    );
+    const [messages] = await pool.query(
+      'SELECT COUNT(*) AS count FROM messages WHERE recipient_id = ? AND sender_role = ?',
+      [userId, 'employer']
+    );
+    const [savedJobs] = await pool.query(
+      'SELECT COUNT(*) AS count FROM saved_jobs WHERE user_id = ?',
+      [userId]
+    );
+
+    res.status(200).json({
+      totalApplications: totalApps[0].count,
+      interviewsScheduled: interviews[0].count,
+      offersReceived: offers[0].count,
+      responseRate,
+      applicationProgress: {
+        submitted: awaiting[0].count,
+        underReview: underReview[0].count,
+        awaitingResponse: awaiting[0].count,
+      },
+      interviewPipeline: {
+        scheduled: interviews[0].count,
+        upcoming: upcoming[0].count,
+        completed: completed[0].count,
+      },
+      jobOffers: {
+        received: offers[0].count,
+        pendingDecision: pending[0].count,
+        accepted: accepted[0].count,
+      },
+      engagement: {
+        profileViews: profileViews[0]?.profile_views || 0,
+        employerMessages: messages[0].count,
+        savedJobs: savedJobs[0].count,
+      },
+    });
+  } catch (error) {
+    console.error('Error fetching seeker summary:', error);
+    res.status(500).json({ error: 'Failed to fetch summary data' });
   }
 };
