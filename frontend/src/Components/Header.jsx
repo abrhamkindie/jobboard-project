@@ -288,6 +288,16 @@ export default function Header() {
   const employerId = localStorage.getItem("employer_id");  
 
 
+
+  console.log("token",token);
+  console.log("userRole",userRole);
+  console.log("employerId",employerId);
+  console.log("userId",userId);
+  console.log("role",role);
+ 
+
+
+
   const navigate = useNavigate();
 
    const getDriveImageUrl = (url) => {
