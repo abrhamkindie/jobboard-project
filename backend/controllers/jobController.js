@@ -1486,7 +1486,7 @@ exports.getJobListings = async (req, res) => {
       if (job.company_logo && !isDriveUrl(job.company_logo)) {
         job.company_logo = `${Base_Url}${job.company_logo}`;
         
-        console.log("company_logo from the getjobposting");
+        console.log("company_logo from the getjobposting",company_logo);
       }
     });
 
