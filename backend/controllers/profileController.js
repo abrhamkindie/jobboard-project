@@ -329,7 +329,7 @@ exports.updateEmployerProfile = async (req, res) => {
 
 
 
- 
+ import pool from "../config/Pool";
 exports.getSeekerSummary = async (req, res) => {
   const userId = req.user.id; // From authMiddleware (JWT)
 
