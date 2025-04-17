@@ -1,6 +1,7 @@
  const { google } = require("googleapis");
 const Base_Url = require("../config/Base_Url");
-
+const pool =require("../config/Pool");
+ 
 const auth = new google.auth.GoogleAuth({
   credentials: {
     client_email: process.env.GOOGLE_CLIENT_EMAIL,
@@ -329,8 +330,7 @@ exports.updateEmployerProfile = async (req, res) => {
 
 
 
- import pool from "../config/Pool";
-exports.getSeekerSummary = async (req, res) => {
+ exports.getSeekerSummary = async (req, res) => {
   const userId = req.user.id; // From authMiddleware (JWT)
 
   try {
