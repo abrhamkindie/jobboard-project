@@ -581,11 +581,21 @@ export const BrowseJobs = () => {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 p-4 bg-white rounded-lg shadow-sm border border-teal-100">
                   <div className="flex items-center space-x-4 mb-4 sm:mb-0">
                     <div className="flex-shrink-0">
-                      <img
+                      {/* <img
                         src={selectedJob.company_logo || "/default-logo.png"}
                         alt={selectedJob.company_name}
                         className="w-12 h-12 sm:w-16 sm:h-12 rounded-lg object-cover border-2 border-teal-100 hover:border-teal-500 transition-all duration-300 shadow-sm"
-                      />
+                      /> */}
+
+
+
+
+                    <img
+                    src={getDriveImageUrl(selectedJob.company_logo) || "/default-profile.jpg"}
+                    alt="companyLogo"
+                    className="w-12 h-12 sm:w-16 sm:h-12 rounded-lg object-cover border-2 border-teal-100 hover:border-teal-500 transition-all duration-300 shadow-sm"
+                    onError={(e) => (e.target.src = "/default-profile.jpg")}  
+                    />
                     </div>
                     <div>
                       <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-teal-700 hover:text-teal-800 hover:underline transition-all duration-300">

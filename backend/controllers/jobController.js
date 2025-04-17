@@ -1484,10 +1484,8 @@ exports.getJobListings = async (req, res) => {
     const [results] = await req.db.query(query, queryParams);
     results.forEach((job) => {
       if (job.company_logo && !isDriveUrl(job.company_logo)) {
-        job.company_logo = `${Base_Url}${job.company_logo}`;
-        
-        console.log("company_logo from the getjobposting",job.company_logo);
-      }
+        job.company_logo = `${Base_Url}${job.company_logo}`;        
+       }
     });
 
     const countQuery = `SELECT COUNT(*) as total FROM job_postings jp JOIN employers e ON jp.employer_id = e.employer_id WHERE 1=1`;
