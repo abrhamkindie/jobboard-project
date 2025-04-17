@@ -6,6 +6,22 @@ import { FaBookmark, FaDollarSign, FaBriefcase, FaCalendarCheck, FaStar } from "
 import { MapPin, Clock, Users, CheckCircle } from "lucide-react";
 import { useRef, useState } from "react";
 
+
+
+const getDriveImageUrl = (url) => {
+
+  if (!url || !url.includes("drive.google.com")) return null;
+
+  // Extract file ID from different Google Drive URL formats
+  const fileId = url.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]+)/)?.[1];
+  if (!fileId) return null;
+
+  // Use Google's thumbnail proxy (works in <img> tags)
+  return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+};
+
+ 
+
 function JobListing({
   jobTitle,
   companyName,
@@ -94,10 +110,19 @@ function JobListing({
         {/* Company Logo and Name */}
         <div className="flex items-start gap-3 sm:gap-4">
           <div className="flex flex-col items-center space-y-1.5">
-            <img
+            {/* <img
               src={companyLogo || "/default-logo.png"}
               alt={companyName}
               className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-teal-200"
+            /> */}
+
+
+
+            <img
+            src={getDriveImageUrl(companyLogo) || "/default-profile.jpg"}
+            alt="companyLogo"
+            className="w-10 sm:w-12 h-10 sm:h-12 rounded-full border-2 border-teal-100"
+            onError={(e) => (e.target.src = "/default-profile.jpg")}  
             />
             <span className="text-gray-700 text-sm sm:text-base font-medium text-center">
               {companyName}

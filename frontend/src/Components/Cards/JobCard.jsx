@@ -105,20 +105,13 @@ function JobCard({
       {/* Company Logo and Name */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
         <div className="flex flex-col items-center space-y-1 w-full sm:w-1/3">
-          {/* <img
-            src={job.company_logo || "/default-logo.png"}
-            alt={job.company_name}
-            className="w-10 sm:w-12 h-10 sm:h-12 rounded-full border-2 border-teal-100"
-          /> */}
-
-
-
-<img
-                    src={getDriveImageUrl(job.company_logo) || "/default-profile.jpg"}
-                    alt="companyLogo"
-                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-teal-100 cursor-pointer"
-                    onError={(e) => (e.target.src = "/default-profile.jpg")}  
-                    />
+        
+          <img
+          src={getDriveImageUrl(job.company_logo) || "/default-profile.jpg"}
+          alt="companyLogo"
+          className="w-10 sm:w-12 h-10 sm:h-12 rounded-full border-2 border-teal-100"
+          onError={(e) => (e.target.src = "/default-profile.jpg")}  
+          />
 
           <span className="text-gray-700 text-xs sm:text-sm font-medium text-center">{job.company_name}</span>
         </div>

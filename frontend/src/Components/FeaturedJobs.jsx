@@ -32,6 +32,8 @@ export default function FeaturedJobs() {
       });
   }, []);
 
+ 
+
   const handleClickedJob = (job) => {
     localStorage.setItem("clickedJob", JSON.stringify(job));
     navigate("/BrowseJobs");
