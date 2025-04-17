@@ -288,16 +288,6 @@ export default function Header() {
   const employerId = localStorage.getItem("employer_id");  
 
 
-
-  console.log("token",token);
-  console.log("userRole",userRole);
-  console.log("employerId",employerId);
-  console.log("userId",userId);
-  console.log("role",role);
- 
-
-
-
   const navigate = useNavigate();
 
    const getDriveImageUrl = (url) => {
@@ -315,7 +305,7 @@ export default function Header() {
 
   useEffect(() => {
 
-    const endpoint = role === "seeker" ? "employer_profile" : "seeker_profile";
+    const endpoint = role === "seeker" ? "seeker_profile" : "employer_profile";
     axios
   .get(`${BASE_URL}/profile/${endpoint}`,{
     params: { user_id: role === "seeker" ? userId :employerId },
