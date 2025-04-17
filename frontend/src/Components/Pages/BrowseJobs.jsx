@@ -461,12 +461,9 @@ export const BrowseJobs = () => {
 
                       {/* View Details and Save Button */}
                       <div className="flex justify-between items-center mt-2">
-                        <a
-                          href={`/job/${job.id}`}
-                          className="text-teal-600 text-sm font-medium hover:text-teal-800 cursor-pointer hover:underline"
-                        >
+                        <p className="text-teal-600 text-sm font-medium hover:text-teal-800 cursor-pointer hover:underline"                        >
                           View Details
-                        </a>
+                        </p>
                         {role !== "employer" && (
                           
                       <Button
