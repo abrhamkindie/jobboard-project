@@ -442,7 +442,7 @@ export const BrowseJobs = () => {
                     <img
                     src={getDriveImageUrl(job.company_logo) || "/default-profile.jpg"}
                     alt="companyLogo"
-                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-teal-200 shadow-md"
+                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-teal-100 cursor-pointer"
                     onError={(e) => (e.target.src = "/default-profile.jpg")}  
                     />
 

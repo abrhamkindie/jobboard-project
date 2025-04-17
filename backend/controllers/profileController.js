@@ -492,8 +492,7 @@ exports.updateUserProfile = async (req, res) => {
 // Employer methods unchanged
 exports.getEmployerInfo = async (req, res) => {
   const user_id = req.query.user_id || req.user.employer_id || req.user.id;
-  console.log("getEmployerInfo - Fetching for user_id:", user_id);
-
+ 
   if (!user_id) {
     return res.status(400).json({ error: "User ID is required" });
   }
