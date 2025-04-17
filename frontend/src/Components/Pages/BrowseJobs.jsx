@@ -720,7 +720,7 @@ export const BrowseJobs = () => {
                 </div>
 
                 {/* Apply Button (for Job Seekers) */}
-                {role === "seeker" && (
+                {role !== "employer" && (
                   <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4">
                     <Button
                       onClick={(e) => {
