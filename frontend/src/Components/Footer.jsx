@@ -29,7 +29,7 @@ export default function Footer() {
           <h2 className="text-lg font-semibold text-teal-600 mb-3">Job Seekers</h2>
           <ul className="space-y-2 text-sm sm:text-base">
             <li>
-              <a href={navigate("/BrowseJobs")} className="text-gray-600 hover:text-teal-600 transition-colors duration-200">
+              <a href="BrowseJobs" className="text-gray-600 hover:text-teal-600 transition-colors duration-200">
                 Search Jobs 
               </a>
             </li>
