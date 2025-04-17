@@ -20,6 +20,19 @@ export const ManagePosts = ({ onSetActiveContent }) => {
   const employerId = localStorage.getItem("employer_id");
   const authToken = localStorage.getItem("authToken");
 
+
+  const getDriveImageUrl = (url) => {
+
+    if (!url || !url.includes("drive.google.com")) return null;
+  
+    // Extract file ID from different Google Drive URL formats
+    const fileId = url.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]+)/)?.[1];
+    if (!fileId) return null;
+  
+    // Use Google's thumbnail proxy (works in <img> tags)
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+  };
+ 
   const calculateDaysLeft = (deadline) => {
     if (!deadline) return { days: null, displayText: "No deadline set" };
     const currentDate = new Date();
@@ -149,11 +162,20 @@ export const ManagePosts = ({ onSetActiveContent }) => {
             <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8 border border-gray-200">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8">
                 <div className="flex items-center space-x-5 mb-4 sm:mb-0">
-                  <img
+                  {/* <img
                     src={selectedJob.company_logo || "/default-logo.png"}
                     alt={selectedJob.company_name}
                     className="w-16 h-16 rounded-full object-cover border-2 border-teal-200 shadow-sm"
-                  />
+                  /> */}
+
+              <img
+                src={getDriveImageUrl(selectedJob.company_logo) || "/default-profile.jpg"}
+                alt="companyLogo"
+                className="w-16 h-16 rounded-full object-cover border-2 border-teal-200 shadow-sm"
+                onError={(e) => (e.target.src = "/default-profile.jpg")}  
+                />
+  
+
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900 tracking-tight">{selectedJob.job_title}</h2>
                     <p className="text-lg text-gray-600">{selectedJob.company_name}</p>
@@ -340,11 +362,21 @@ export const ManagePosts = ({ onSetActiveContent }) => {
                       <div className="flex flex-col gap-2 mb-3">
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                           <div className="flex items-center space-x-3">
-                            <img
+                            {/* <img
                               src={job.company_logo || "/default-logo.png"}
                               alt={job.company_name}
                               className="w-10 h-10 rounded-full object-cover border-2 border-teal-200 shadow-sm flex-shrink-0"
-                            />
+                            /> */}
+
+
+
+              <img
+                src={getDriveImageUrl(job.company_logo) || "/default-profile.jpg"}
+                alt="company_logo"
+                className="w-16 h-16 rounded-full object-cover border-2 border-teal-200 shadow-sm"
+                onError={(e) => (e.target.src = "/default-profile.jpg")}  
+                />
+
                             <div className="flex flex-col">
                               <h3 className="text-lg font-semibold text-gray-900 tracking-tight">{job.job_title}</h3>
                               <p className="text-sm text-gray-600">{job.company_name}</p>

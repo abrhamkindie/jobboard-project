@@ -20,8 +20,6 @@ const getDriveImageUrl = (url) => {
   return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
 };
 
- 
-
 function JobListing({
   jobTitle,
   companyName,
@@ -110,18 +108,13 @@ function JobListing({
         {/* Company Logo and Name */}
         <div className="flex items-start gap-3 sm:gap-4">
           <div className="flex flex-col items-center space-y-1.5">
-            {/* <img
-              src={companyLogo || "/default-logo.png"}
-              alt={companyName}
-              className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-teal-200"
-            /> */}
-
+           
 
 
             <img
             src={getDriveImageUrl(companyLogo) || "/default-profile.jpg"}
             alt="companyLogo"
-            className="w-10 sm:w-12 h-10 sm:h-12 rounded-full border-2 border-teal-100"
+            className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-teal-200"
             onError={(e) => (e.target.src = "/default-profile.jpg")}  
             />
             <span className="text-gray-700 text-sm sm:text-base font-medium text-center">
