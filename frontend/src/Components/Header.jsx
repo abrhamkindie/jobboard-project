@@ -6,11 +6,10 @@ import BASE_URL from "./API";
 export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole] = useState(null);
-  // const [profilePicture, setProfilePicture] = useState(null);
-  // const [company_logo, setCompany_logo] = useState(null);
+  
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // New state for mobile menu
+  const [isMenuOpen, setIsMenuOpen] = useState(false); 
   const [userProfile, setUserProfile] = useState({});
 
   const token = localStorage.getItem("authToken");
@@ -20,13 +19,6 @@ export default function Header() {
 
 
   const navigate = useNavigate();
-
-
-
- 
- 
-
-
 
    const getDriveImageUrl = (url) => {
 
@@ -52,49 +44,32 @@ export default function Header() {
   .then((response) => {
     const data = response.data;
     setUserProfile(data);
-
-    localStorage.setItem("companyLogo", role === "seeker" ? data.profile  : data.logo  || "");
-   })
+    })
   .catch((error) => {
     console.error("Error fetching employer profile:", error);
     });
 }, [employerId,userId,role, token]);
 
-
-
-
-
-
-
-
   useEffect(() => {
     
-    // const userProfilePicture = localStorage.getItem("profile_picture_url");
-    // const userCompany_logo = localStorage.getItem("companyLogo");
-
     if (token && userRole) {
       setIsLoggedIn(true);
       setRole(userRole);
-      // setProfilePicture(userProfilePicture);
-      // setCompany_logo(userCompany_logo);
+     
     }
 
     const handleAuthChange = () => {
       const updatedToken = localStorage.getItem("authToken");
-      const updatedRole = localStorage.getItem("role");
-      // const updatedProfilePicture = localStorage.getItem("profile_picture_url");
-      // const updatedCompany_logo = localStorage.getItem("companyLogo");
+      const updatedRole = localStorage.getItem("role");    
 
       if (updatedToken) {
         setIsLoggedIn(true);
         setRole(updatedRole);
-        // setProfilePicture(updatedProfilePicture);
-        // setCompany_logo(updatedCompany_logo);
+        
       } else {
         setIsLoggedIn(false);
         setRole(null);
-        // setProfilePicture(null);
-        // setCompany_logo(null);
+        
       }
     };
 
@@ -133,8 +108,7 @@ export default function Header() {
 
     setIsLoggedIn(false);
     setRole(null);
-    // setProfilePicture(null);
-    // setCompany_logo(null);
+  
 
     window.dispatchEvent(new Event("authChange"));
     navigate("/login");
