@@ -428,8 +428,7 @@ export const BrowseJobs = () => {
                           <FaCalendarCheck size={12} className="text-teal-600" />
                           {formatPostingDate(job.created_at)}
                         </span>
-                        <span className="bg-teal-600 text-white text-xs px-1.5 py-0.5 rounded-md shadow-sm">Featured</span>
-                      </div>
+                       </div>
 
                       {/* Job Title and Company Info */}
                       <div className="flex items-center gap-3 mb-3">
