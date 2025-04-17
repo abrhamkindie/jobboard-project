@@ -433,11 +433,6 @@ export const BrowseJobs = () => {
                       {/* Job Title and Company Info */}
                       <div className="flex items-center gap-3 mb-3">
                         <div className="flex justify-center">
-
-
-
-
-
                     <img
                     src={getDriveImageUrl(job.company_logo) || "/default-profile.jpg"}
                     alt="companyLogo"
@@ -472,27 +467,33 @@ export const BrowseJobs = () => {
                         >
                           View Details
                         </a>
-                        <Button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSaveJob(job);
-                          }}
-                          className={`border px-2 py-1 sm:px-3 sm:py-2 rounded-lg transition-all duration-300 inline-flex items-center justify-center ${
-                            savedJobs.includes(job.id)
-                              ? "bg-amber-50 text-amber-700 border-amber-600 hover:bg-amber-100 hover:border-amber-700"
-                              : "bg-teal-50 text-teal-700 border-teal-600 hover:bg-teal-100 hover:border-teal-700"
-                          }`}
-                          aria-label={savedJobs.includes(job.id) ? "Unsave job" : "Save job"}
-                        >
-                          <FaBookmark
-                            className={`inline-block mr-1 sm:mr-2 ${
-                              savedJobs.includes(job.id) ? "text-amber-700" : "text-teal-700"
-                            }`}
-                          />
-                          <span className="text-xs sm:text-sm font-medium">
-                            {savedJobs.includes(job.id) && authToken ? "Saved" : "Save"}
-                          </span>
-                        </Button>
+                        {role !== "employer" && (
+                          
+                      <Button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSaveJob(job);
+                      }}
+                      className={`border px-2 py-1 sm:px-3 sm:py-2 rounded-lg transition-all duration-300 inline-flex items-center justify-center ${
+                        savedJobs.includes(job.id)
+                          ? "bg-amber-50 text-amber-700 border-amber-600 hover:bg-amber-100 hover:border-amber-700"
+                          : "bg-teal-50 text-teal-700 border-teal-600 hover:bg-teal-100 hover:border-teal-700"
+                      }`}
+                      aria-label={savedJobs.includes(job.id) ? "Unsave job" : "Save job"}
+                    >
+                      <FaBookmark
+                        className={`inline-block mr-1 sm:mr-2 ${
+                          savedJobs.includes(job.id) ? "text-amber-700" : "text-teal-700"
+                        }`}
+                      />
+                      <span className="text-xs sm:text-sm font-medium">
+                        {savedJobs.includes(job.id) && authToken ? "Saved" : "Save"}
+                      </span>
+                    </Button>
+
+                        )}
+
+                   
                       </div>
                     </div>
                   ) : (
@@ -562,15 +563,7 @@ export const BrowseJobs = () => {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 p-4 bg-white rounded-lg shadow-sm border border-teal-100">
                   <div className="flex items-center space-x-4 mb-4 sm:mb-0">
                     <div className="flex-shrink-0">
-                      {/* <img
-                        src={selectedJob.company_logo || "/default-logo.png"}
-                        alt={selectedJob.company_name}
-                        className="w-12 h-12 sm:w-16 sm:h-12 rounded-lg object-cover border-2 border-teal-100 hover:border-teal-500 transition-all duration-300 shadow-sm"
-                      /> */}
-
-
-
-
+                     
                     <img
                     src={getDriveImageUrl(selectedJob.company_logo) || "/default-profile.jpg"}
                     alt="companyLogo"

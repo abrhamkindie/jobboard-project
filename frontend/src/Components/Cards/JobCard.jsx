@@ -170,7 +170,7 @@ function JobCard({
 
       {/* Buttons */}
       <div className="flex flex-col sm:flex-row justify-between gap-2 mt-3">
-        {role !== "employer" && (
+        {role !== "employer" ? (
           <>
             <Button
               onClick={(e) => {
@@ -219,6 +219,14 @@ function JobCard({
                   : "Apply Now"}
             </Button>
           </>
+        ):(
+          <a
+          href={`/job/${job.id}`}
+          className="text-teal-600 text-sm font-medium hover:text-teal-800 cursor-pointer hover:underline"
+        >
+          View Details
+        </a>
+        
         )}
       </div>
     </div>
