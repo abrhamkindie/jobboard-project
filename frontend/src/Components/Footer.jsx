@@ -235,12 +235,12 @@ export default function Footer() {
                                 </button>
                             </li>
                             <li>
-                                <button onClick={() => handleLinkClick("JobAlerts")} className="text-gray-600 hover:text-teal-600 transition-colors duration-200">
+                                <button onClick={() => handleLinkClick("")} className="text-gray-600 hover:text-teal-600 transition-colors duration-200">
                                     Job Alerts
                                 </button>
                             </li>
                             <li>
-                                <button onClick={() => handleLinkClick("CareerAdvice")} className="text-gray-600 hover:text-teal-600 transition-colors duration-200">
+                                <button onClick={() => handleLinkClick("")} className="text-gray-600 hover:text-teal-600 transition-colors duration-200">
                                     Career Advice
                                 </button>
                             </li>
