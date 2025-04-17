@@ -329,8 +329,7 @@ exports.updateEmployerProfile = async (req, res) => {
 
 
 
-const pool = require('../config/db');
-
+ 
 exports.getSeekerSummary = async (req, res) => {
   const userId = req.user.id; // From authMiddleware (JWT)
 
@@ -438,3 +437,4 @@ exports.getSeekerSummary = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch summary data' });
   }
 };
+
