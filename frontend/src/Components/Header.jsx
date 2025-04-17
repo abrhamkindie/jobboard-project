@@ -511,8 +511,8 @@ export default function Header() {
                       <img
                       src={getDriveImageUrl(userProfile.profile) || "/default-profile.jpg"}
                       alt="profile"
-                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-teal-200 shadow-md"
-                      onError={(e) => (e.target.src = "/default-profile.jpg")}  
+                      className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border-2 border-teal-300 hover:border-teal-400 transition transform hover:scale-110"
+                    onError={(e) => (e.target.src = "/default-profile.jpg")}  
                     />
                     )}
                     
@@ -555,8 +555,8 @@ export default function Header() {
                         <img
                         src={getDriveImageUrl(userProfile.logo) || "/default-profile.jpg"}
                         alt="companyLogo"
-                        className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-teal-200 shadow-md"
-                        onError={(e) => (e.target.src = "/default-profile.jpg")}  
+                      className="w-8 h-8 sm:w-9 sm:h-9 rounded-full border-2 border-teal-300 hover:border-teal-400 transition transform hover:scale-110"
+                      onError={(e) => (e.target.src = "/default-profile.jpg")}  
                       />
                     )}
                   </NavLink>
