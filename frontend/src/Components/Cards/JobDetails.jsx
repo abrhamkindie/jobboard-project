@@ -11,6 +11,21 @@ const Card = ({ children, className = "" }) => (
   </div>
 );
 
+
+const getDriveImageUrl = (url) => {
+
+  if (!url || !url.includes("drive.google.com")) return null;
+
+  // Extract file ID from different Google Drive URL formats
+  const fileId = url.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]+)/)?.[1];
+  if (!fileId) return null;
+
+  // Use Google's thumbnail proxy (works in <img> tags)
+  return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+};
+
+ 
+
 const JobDetails = ({
   selectedJob,
   setSelectedJob,
@@ -31,11 +46,14 @@ const JobDetails = ({
       {/* Header */}
       <Card className="mb-6 flex items-center justify-between">
         <div className="flex items-center space-x-4">
+         
           <img
-            src={selectedJob.company_logo || "/default-logo.png"}
-            alt={selectedJob.company_name}
-            className="w-14 h-14 rounded-lg object-cover border-2 border-teal-100 hover:border-teal-500 transition-all duration-300"
+          src={getDriveImageUrl(selectedJob.company_logo ) || "/default-profile.jpg"}
+          alt={selectedJob.company_name}
+          className="w-14 h-14 rounded-lg object-cover border-2 border-teal-100 hover:border-teal-500 transition-all duration-300"
+          onError={(e) => (e.target.src = "/default-profile.jpg")}  
           />
+
           <div>
             <h2 className="text-xl font-bold text-teal-700 hover:text-teal-800 transition-all duration-300">
               {selectedJob.job_title}

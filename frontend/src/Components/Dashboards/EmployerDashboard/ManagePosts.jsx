@@ -161,8 +161,7 @@ export const ManagePosts = ({ onSetActiveContent }) => {
             // Original Job Details View (unchanged)
             <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8 border border-gray-200">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8">
-                <div className="flex items-center space-x-5 mb-4 sm:mb-0">
-                
+                <div className="flex items-center space-x-5 mb-4 sm:mb-0">               
 
               <img
                 src={getDriveImageUrl(selectedJob.company_logo) || "/default-profile.jpg"}
@@ -358,7 +357,7 @@ export const ManagePosts = ({ onSetActiveContent }) => {
                       <div className="flex flex-col gap-2 mb-3">
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                           <div className="flex items-center space-x-3">              
-                            
+
                         <img
                           src={getDriveImageUrl(job.company_logo) || "/default-profile.jpg"}
                           alt="company_logo"

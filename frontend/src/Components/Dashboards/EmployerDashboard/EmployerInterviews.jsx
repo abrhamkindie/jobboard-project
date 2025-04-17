@@ -143,13 +143,7 @@ export const EmployerInterviews = () => {
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
                   <div className="flex items-center gap-4">
                     {interview.jobSeekerProfilePicture ? (
-                      // <img
-                      //   src={interview.jobSeekerProfilePicture}
-                      //   alt={`${interview.jobSeekerName}'s profile`}
-                      //   className="w-12 h-12 rounded-full object-cover border-2 border-teal-200"
-                      //   onError={(e) => (e.target.src = 'https://via.placeholder.com/48?text=No+Image')}
-                      // />
-
+                     
                       <img
                       src={getDriveImageUrl(interview.jobSeekerProfilePicture) || "/default-profile.jpg"}
                       alt="company_logo"
@@ -226,14 +220,7 @@ export const EmployerInterviews = () => {
                   <div className="mt-4 p-4 bg-teal-50 rounded-lg border border-teal-200 shadow-sm">
                     <div className="flex items-center gap-4 mb-3">
                       {interview.jobSeekerProfilePicture ? (
-                        // <img
-                        //   src={interview.jobSeekerProfilePicture}
-                        //   alt={`${interview.jobSeekerName}'s profile`}
-                        //   className="w-16 h-16 rounded-full object-cover border-2 border-teal-200"
-                        //   onError={(e) => (e.target.src = 'https://via.placeholder.com/64?text=No+Image')}
-                        // />
-
-
+                      
                         <img
                         src={getDriveImageUrl(interview.jobSeekerProfilePicture) || "/default-profile.jpg"}
                         alt="company_logo"

@@ -336,14 +336,7 @@ import {FaBookmark} from "react-icons/fa";
        >
          {/* 🏢 Company & Job Title */}
          <div className="flex items-center space-x-3">
-           {/* <img
-             src={job.company_logo || "/default-logo.png"}
-             alt={job.company_name}
-             className="w-16 h-12 rounded-md object-cover border border-teal-100"
-           /> */}
-
-
-        <img
+                 <img
             src={getDriveImageUrl(job.company_logo) || "/default-profile.jpg"}
             alt={job.company_name}
             className="w-16 h-12 rounded-md object-cover border border-teal-100"

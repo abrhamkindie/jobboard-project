@@ -232,12 +232,7 @@
          {userProfile.profile && (
            <div className="flex flex-col items-center mb-8">
              <div className="relative flex justify-center items-center w-full max-w-xs">
-               {/* <img
-                 src={`${BASE_URL}${user.picture}`}
-                 alt="Profile"
-                 className="w-20 h-20 rounded-full border-2 border-teal-100 object-cover hover:scale-105 transition-transform duration-300 shadow-md"
-               /> */}
-
+             
           <img
             src={getDriveImageUrl(userProfile.profile) || "/default-profile.jpg"}
             alt="companyLogo"

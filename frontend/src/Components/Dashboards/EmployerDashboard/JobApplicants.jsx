@@ -485,12 +485,7 @@ export const JobApplicants = ({ jobId,onSetActiveContent }) => {
 
             <div className="bg-gray-50 rounded-lg p-6 mb-6 border border-gray-100">
               <div className="flex items-center space-x-4">
-                {/* <img
-                  src={selectedApplicant.ApplicantProfile || "https://via.placeholder.com/48"}
-                  alt={`${selectedApplicant.full_name}'s profile`}
-                  className="h-16 w-16 rounded-full object-cover border-2 border-teal-200 shadow-sm flex-shrink-0"
-                /> */}
-
+          
 
                      <img
                       src={getDriveImageUrl(selectedApplicant.ApplicantProfile ) || "/default-profile.jpg"}

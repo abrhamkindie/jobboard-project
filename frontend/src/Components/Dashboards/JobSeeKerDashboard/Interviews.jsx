@@ -163,12 +163,7 @@ export const Interviews = () => {
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <div className="flex items-center space-x-4">
                       {interview.companyLogo && (
-                        // <img
-                        //   src={interview.companyLogo}
-                        //   alt="Company Logo"
-                        //   className="h-12 w-12 rounded-full object-cover border-2 border-teal-200 shadow-sm flex-shrink-0"
-                        // />
-
+                     
                         <img
                         src={getDriveImageUrl(interview.companyLogo) || "/default-profile.jpg"}
                         alt="company_logo"
