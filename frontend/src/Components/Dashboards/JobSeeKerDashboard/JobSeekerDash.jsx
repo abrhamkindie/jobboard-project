@@ -1,4 +1,3 @@
- 
 import { useState } from "react";
 import { SavedJobs } from "./SavedJobs.jsx";
 import { SeekerSidebar } from "./SeekerSidebar.jsx";
@@ -11,9 +10,6 @@ import { AppliedJobs } from "./AppliedJobs.jsx";
 import { Interviews } from "./Interviews.jsx";
    export const JobSeekerDash = () => {
   const [activeContent, setActiveContent] = useState("SeekerSummary"); 
-
- 
-   
  
   function handleActiveContent(contentId) {
     setActiveContent(contentId);

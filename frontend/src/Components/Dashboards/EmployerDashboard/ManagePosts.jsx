@@ -162,11 +162,7 @@ export const ManagePosts = ({ onSetActiveContent }) => {
             <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8 border border-gray-200">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8">
                 <div className="flex items-center space-x-5 mb-4 sm:mb-0">
-                  {/* <img
-                    src={selectedJob.company_logo || "/default-logo.png"}
-                    alt={selectedJob.company_name}
-                    className="w-16 h-16 rounded-full object-cover border-2 border-teal-200 shadow-sm"
-                  /> */}
+                
 
               <img
                 src={getDriveImageUrl(selectedJob.company_logo) || "/default-profile.jpg"}
@@ -361,21 +357,14 @@ export const ManagePosts = ({ onSetActiveContent }) => {
                     >
                       <div className="flex flex-col gap-2 mb-3">
                         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                          <div className="flex items-center space-x-3">
-                            {/* <img
-                              src={job.company_logo || "/default-logo.png"}
-                              alt={job.company_name}
-                              className="w-10 h-10 rounded-full object-cover border-2 border-teal-200 shadow-sm flex-shrink-0"
-                            /> */}
-
-
-
-              <img
-                src={getDriveImageUrl(job.company_logo) || "/default-profile.jpg"}
-                alt="company_logo"
-                className="w-16 h-16 rounded-full object-cover border-2 border-teal-200 shadow-sm"
-                onError={(e) => (e.target.src = "/default-profile.jpg")}  
-                />
+                          <div className="flex items-center space-x-3">              
+                            
+                        <img
+                          src={getDriveImageUrl(job.company_logo) || "/default-profile.jpg"}
+                          alt="company_logo"
+                          className="w-16 h-16 rounded-full object-cover border-2 border-teal-200 shadow-sm"
+                          onError={(e) => (e.target.src = "/default-profile.jpg")}  
+                          />
 
                             <div className="flex flex-col">
                               <h3 className="text-lg font-semibold text-gray-900 tracking-tight">{job.job_title}</h3>

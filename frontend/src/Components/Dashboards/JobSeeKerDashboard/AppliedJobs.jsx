@@ -331,6 +331,20 @@ export const AppliedJobs = () => {
   const [withdrawing, setWithdrawing] = useState(false);
   const authToken = localStorage.getItem("authToken");
   const userId = localStorage.getItem("user_Id");
+  const getDriveImageUrl = (url) => {
+
+    if (!url || !url.includes("drive.google.com")) return null;
+  
+    // Extract file ID from different Google Drive URL formats
+    const fileId = url.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]+)/)?.[1];
+    if (!fileId) return null;
+  
+    // Use Google's thumbnail proxy (works in <img> tags)
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+  };
+ 
+  
+
 
   const fetchAppliedJobs = useCallback(async () => {
     if (!authToken || !userId) {
@@ -474,11 +488,19 @@ export const AppliedJobs = () => {
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                       <div className="flex items-center space-x-3">
                         {job.companyLogo && (
+                          // <img
+                          //   src={job.companyLogo}
+                          //   alt="Company Logo"
+                          //   className="w-10 h-10 rounded-full object-cover border-2 border-teal-200 shadow-sm flex-shrink-0"
+                          // />
+
                           <img
-                            src={job.companyLogo}
-                            alt="Company Logo"
-                            className="w-10 h-10 rounded-full object-cover border-2 border-teal-200 shadow-sm flex-shrink-0"
+                          src={getDriveImageUrl(job.companyLogo) || "/default-profile.jpg"}
+                          alt="company_logo"
+                          className="w-10 h-10 rounded-full object-cover border-2 border-teal-200 shadow-sm flex-shrink-0"
+                          onError={(e) => (e.target.src = "/default-profile.jpg")}  
                           />
+
                         )}
                         <div className="flex flex-col">
                           <h3 className="text-lg font-semibold text-gray-900 hover:text-teal-600 transition-colors duration-150">{job.title || 'Untitled'}</h3>
@@ -556,8 +578,21 @@ export const AppliedJobs = () => {
             <div className="bg-gray-50 rounded-lg p-4 mb-6 border border-gray-100">
               <div className="flex items-center space-x-4">
                 {selectedJob.companyLogo && (
-                  <img src={selectedJob.companyLogo} alt="Company Logo" className="h-12 w-12 rounded-full object-cover border-2 border-teal-200 shadow-sm" />
-                )}
+
+
+
+                  // <img src={selectedJob.companyLogo} 
+                  // alt="Company Logo" 
+                  // className="h-12 w-12 rounded-full object-cover border-2 border-teal-200 shadow-sm" 
+                  // />
+                
+                  <img
+                  src={getDriveImageUrl(selectedJob.companyLogo) || "/default-profile.jpg"}
+                  alt="company_logo"
+                  className="h-12 w-12 rounded-full object-cover border-2 border-teal-200 shadow-sm"
+                  onError={(e) => (e.target.src = "/default-profile.jpg")}  
+                  />
+               )}
                 <div className="flex flex-col">
                   <h2 className="text-xl font-bold text-gray-900 tracking-tight">{selectedJob.title || 'Untitled'}</h2>
                   <p className="text-sm text-gray-600">{selectedJob.companyName || 'Unknown Company'} • {selectedJob.location || 'Unknown Location'}</p>

@@ -11,10 +11,21 @@ export const Interviews = () => {
   const authToken = localStorage.getItem('authToken');
   const userId = localStorage.getItem('user_Id');
 
+  const getDriveImageUrl = (url) => {
+
+    if (!url || !url.includes("drive.google.com")) return null;
+  
+    // Extract file ID from different Google Drive URL formats
+    const fileId = url.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]+)/)?.[1];
+    if (!fileId) return null;
+  
+    // Use Google's thumbnail proxy (works in <img> tags)
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+  };
+ 
+ 
   const fetchInterviews = useCallback(async () => {
  
-
-
     if (!authToken || !userId) {
       setError('Please log in to view your interviews.');
       setLoading(false);
@@ -152,11 +163,20 @@ export const Interviews = () => {
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <div className="flex items-center space-x-4">
                       {interview.companyLogo && (
+                        // <img
+                        //   src={interview.companyLogo}
+                        //   alt="Company Logo"
+                        //   className="h-12 w-12 rounded-full object-cover border-2 border-teal-200 shadow-sm flex-shrink-0"
+                        // />
+
                         <img
-                          src={interview.companyLogo}
-                          alt="Company Logo"
-                          className="h-12 w-12 rounded-full object-cover border-2 border-teal-200 shadow-sm flex-shrink-0"
+                        src={getDriveImageUrl(interview.companyLogo) || "/default-profile.jpg"}
+                        alt="company_logo"
+                        className="h-12 w-12 rounded-full object-cover border-2 border-teal-200 shadow-sm flex-shrink-0"
+                        onError={(e) => (e.target.src = "/default-profile.jpg")}  
                         />
+  
+                        
                       )}
                       <div className="flex flex-col">
                         <h3 className="text-lg font-semibold text-gray-900 hover:text-teal-600 transition-colors duration-150">

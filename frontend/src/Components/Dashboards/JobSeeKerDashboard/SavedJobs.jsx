@@ -11,24 +11,32 @@ import {FaBookmark} from "react-icons/fa";
 export const SavedJobs = () => {
     const [JobList, setJobList] = useState([]);
     const [selectedJob, setSelectedJob] = useState(null);
-
     const [savedJobs, setSavedJobs] = useState([]);
     const [appliedJobs, setAppliedJobs] = useState([]);
     const [showApplicationModal, setShowApplicationModal] = useState(false);
     const authToken=localStorage.getItem("authToken");
     const [activeJobId, setActiveJobId] = useState(null);
-
-      
-const [isLoading, setIsLoading] = useState(false);
-const [error, setError] = useState("");
-
-  const navigate = useNavigate();
-  const modal = useRef();
-  const modalRef = useRef();  
-
-  const role = localStorage.getItem("role");
-  const userId = localStorage.getItem("user_Id");
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("");
+    const navigate = useNavigate();
+    const modal = useRef();
+    const modalRef = useRef();  
+    const role = localStorage.getItem("role");
+    const userId = localStorage.getItem("user_Id");
  
+    const getDriveImageUrl = (url) => {
+
+      if (!url || !url.includes("drive.google.com")) return null;
+    
+      // Extract file ID from different Google Drive URL formats
+      const fileId = url.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]+)/)?.[1];
+      if (!fileId) return null;
+    
+      // Use Google's thumbnail proxy (works in <img> tags)
+      return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+    };
+   
+  
 
   useEffect(() => {
     if (!localStorage.getItem("authToken")) {
@@ -240,11 +248,19 @@ const filteredSavedJobs = JobList.filter((job) => savedJobsSet.has(job.id));
                    >
                      {/* 🏢 Company & Job Title */}
                      <div className="flex items-center space-x-3">
-                       <img
+                       {/* <img
                          src={job.company_logo || "/default-logo.png"}
                          alt={job.company_name}
                          className="w-16 h-12 rounded-md object-cover border border-teal-100"
-                       />
+                       /> */}
+
+                  <img
+                      src={getDriveImageUrl(job.company_logo) || "/default-profile.jpg"}
+                      alt={job.company_name}
+                      className="w-16 h-12 rounded-md object-cover border border-teal-100"
+                      onError={(e) => (e.target.src = "/default-profile.jpg")}  
+                      />
+
                        <div className="flex-1">
                          <h3 className="text-md font-semibold text-gray-800">{job.job_title}</h3>
                          <p className="text-sm text-gray-600">{job.company_name}</p>

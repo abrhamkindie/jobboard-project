@@ -25,7 +25,19 @@ export const JobApplicants = ({ jobId,onSetActiveContent }) => {
 
   const debouncedStatusUpdateRef = useRef();
 
-  const fetchApplicants = useCallback(async () => {
+  const getDriveImageUrl = (url) => {
+
+    if (!url || !url.includes("drive.google.com")) return null;
+  
+    // Extract file ID from different Google Drive URL formats
+    const fileId = url.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]+)/)?.[1];
+    if (!fileId) return null;
+  
+    // Use Google's thumbnail proxy (works in <img> tags)
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+  };
+ 
+   const fetchApplicants = useCallback(async () => {
     if (!authToken || !employerId || !jobId) {
       setError("Please log in and select a job to view applicants.");
       setLoading(false);
@@ -264,11 +276,21 @@ export const JobApplicants = ({ jobId,onSetActiveContent }) => {
                   <div className="flex flex-col gap-3 mb-4">
                     <div className="flex items-center justify-between gap-3">
                       <div className="flex items-center space-x-4">
-                        <img
+                        {/* <img
                           src={applicant.ApplicantProfile || "https://via.placeholder.com/48"}
                           alt={`${applicant.full_name}'s profile`}
                           className="h-12 w-12 rounded-full object-cover border-2 border-teal-200 shadow-sm flex-shrink-0"
-                        />
+                        /> */}
+
+
+
+                    <img
+                      src={getDriveImageUrl(applicant.ApplicantProfile) || "/default-profile.jpg"}
+                      alt="company_logo"
+                      className="h-12 w-12 rounded-full object-cover border-2 border-teal-200 shadow-sm flex-shrink-0"
+                      onError={(e) => (e.target.src = "/default-profile.jpg")}  
+                      />
+
                         <div className="flex flex-col">
                           <h3 className="text-lg font-semibold text-gray-900 group-hover:text-teal-600 transition-colors duration-150 truncate">
                             {applicant.full_name || "Unnamed Applicant"}
@@ -463,11 +485,20 @@ export const JobApplicants = ({ jobId,onSetActiveContent }) => {
 
             <div className="bg-gray-50 rounded-lg p-6 mb-6 border border-gray-100">
               <div className="flex items-center space-x-4">
-                <img
+                {/* <img
                   src={selectedApplicant.ApplicantProfile || "https://via.placeholder.com/48"}
                   alt={`${selectedApplicant.full_name}'s profile`}
                   className="h-16 w-16 rounded-full object-cover border-2 border-teal-200 shadow-sm flex-shrink-0"
-                />
+                /> */}
+
+
+                     <img
+                      src={getDriveImageUrl(selectedApplicant.ApplicantProfile ) || "/default-profile.jpg"}
+                      alt="company_logo"
+                      className="h-16 w-16 rounded-full object-cover border-2 border-teal-200 shadow-sm flex-shrink-0"
+                      onError={(e) => (e.target.src = "/default-profile.jpg")}  
+                      />
+
                 <div className="flex flex-col">
                   <h2 className="text-2xl font-bold text-gray-900 tracking-tight">{selectedApplicant.full_name || "Unnamed Applicant"}</h2>
                   <p className="text-sm text-gray-600">{selectedApplicant.email || "No email provided"}</p>

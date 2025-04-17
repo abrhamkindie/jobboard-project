@@ -13,6 +13,18 @@ export const EmployerInterviews = () => {
   const userId = localStorage.getItem('user_Id');
   const socketRef = useRef(null);
 
+  const getDriveImageUrl = (url) => {
+
+    if (!url || !url.includes("drive.google.com")) return null;
+  
+    // Extract file ID from different Google Drive URL formats
+    const fileId = url.match(/(?:\/d\/|id=)([a-zA-Z0-9_-]+)/)?.[1];
+    if (!fileId) return null;
+  
+    // Use Google's thumbnail proxy (works in <img> tags)
+    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+  };
+ 
   const fetchInterviews = useCallback(async () => {
     if (!authToken || !userId) {
       setError('Please log in to view interviews.');
@@ -131,12 +143,20 @@ export const EmployerInterviews = () => {
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
                   <div className="flex items-center gap-4">
                     {interview.jobSeekerProfilePicture ? (
+                      // <img
+                      //   src={interview.jobSeekerProfilePicture}
+                      //   alt={`${interview.jobSeekerName}'s profile`}
+                      //   className="w-12 h-12 rounded-full object-cover border-2 border-teal-200"
+                      //   onError={(e) => (e.target.src = 'https://via.placeholder.com/48?text=No+Image')}
+                      // />
+
                       <img
-                        src={interview.jobSeekerProfilePicture}
-                        alt={`${interview.jobSeekerName}'s profile`}
-                        className="w-12 h-12 rounded-full object-cover border-2 border-teal-200"
-                        onError={(e) => (e.target.src = 'https://via.placeholder.com/48?text=No+Image')}
+                      src={getDriveImageUrl(interview.jobSeekerProfilePicture) || "/default-profile.jpg"}
+                      alt="company_logo"
+                      className="w-12 h-12 rounded-full object-cover border-2 border-teal-200"
+                      onError={(e) => (e.target.src = "/default-profile.jpg")}  
                       />
+
                     ) : (
                       <div className="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-semibold text-lg">
                         {interview.jobSeekerName.charAt(0)}
@@ -206,12 +226,22 @@ export const EmployerInterviews = () => {
                   <div className="mt-4 p-4 bg-teal-50 rounded-lg border border-teal-200 shadow-sm">
                     <div className="flex items-center gap-4 mb-3">
                       {interview.jobSeekerProfilePicture ? (
+                        // <img
+                        //   src={interview.jobSeekerProfilePicture}
+                        //   alt={`${interview.jobSeekerName}'s profile`}
+                        //   className="w-16 h-16 rounded-full object-cover border-2 border-teal-200"
+                        //   onError={(e) => (e.target.src = 'https://via.placeholder.com/64?text=No+Image')}
+                        // />
+
+
                         <img
-                          src={interview.jobSeekerProfilePicture}
-                          alt={`${interview.jobSeekerName}'s profile`}
-                          className="w-16 h-16 rounded-full object-cover border-2 border-teal-200"
-                          onError={(e) => (e.target.src = 'https://via.placeholder.com/64?text=No+Image')}
+                        src={getDriveImageUrl(interview.jobSeekerProfilePicture) || "/default-profile.jpg"}
+                        alt="company_logo"
+                        className="w-16 h-16 rounded-full object-cover border-2 border-teal-200"
+                        onError={(e) => (e.target.src = "/default-profile.jpg")}  
                         />
+
+
                       ) : (
                         <div className="w-16 h-16 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-semibold text-xl">
                           {interview.jobSeekerName.charAt(0)}
