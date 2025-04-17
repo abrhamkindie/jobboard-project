@@ -1,8 +1,9 @@
 import facebook from '../images/facebook.png';
 import twitter from '../images/twitter.png';
 import linkedin from '../images/linkedin.png';
-
+import { useNavigate } from 'react-router-dom';
 export default function Footer() {
+  const navigate=useNavigate();
   return (
     <footer className="relative bg-white text-gray-700 pt-12 mt-12 border-t border-teal-300 shadow-sm">
       {/* Decorative Wave Shape */}
@@ -28,8 +29,8 @@ export default function Footer() {
           <h2 className="text-lg font-semibold text-teal-600 mb-3">Job Seekers</h2>
           <ul className="space-y-2 text-sm sm:text-base">
             <li>
-              <a href="#" className="text-gray-600 hover:text-teal-600 transition-colors duration-200">
-                Search Jobs
+              <a href={navigate("/BrowseJobs")} className="text-gray-600 hover:text-teal-600 transition-colors duration-200">
+                Search Jobs 
               </a>
             </li>
             <li>

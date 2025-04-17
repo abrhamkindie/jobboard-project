@@ -445,25 +445,7 @@ export const BrowseJobs = () => {
                     className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-teal-100 cursor-pointer"
                     onError={(e) => (e.target.src = "/default-profile.jpg")}  
                     />
-
-
-
-                          {/* <img
-                            src={job.company_logo || "/default-logo.png"}
-                            alt={job.company_name}
-                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-teal-100 cursor-pointer"
-                          /> */}
-
-
-
-
-
-
-
-
-
-
-
+ 
                         </div>
                         <div className="flex-1">
                           <h3 className="text-teal-700 text-sm font-semibold">
