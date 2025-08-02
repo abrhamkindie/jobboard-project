@@ -1,12 +1,12 @@
-# 🔥 JobFlare – Job Portal Project
+# JobFlare – Job Portal Project
 
 JobFlare is a full-featured job portal platform that connects job seekers with top employers. With features like real-time chat, job saving, application tracking, and interview scheduling, it aims to streamline the job search and recruitment process for both parties.
 
-🌐 **Live Demo**: [Click here to visit](https://jobboard-frontend-8nt8.onrender.com/)
+ **Live Demo**: [Click here to visit](https://jobboard-frontend-8nt8.onrender.com/)
 
 ---
 
-## 🛠 Tech Stack
+##  Tech Stack
 
 **Frontend:**
 - React.js
@@ -22,29 +22,29 @@ JobFlare is a full-featured job portal platform that connects job seekers with t
 
 ---
 
-## 🚀 Features
+## Features
 
-- 🔍 **Job Search & Filters** (by title, location, type)
-- 📋 **Job Listings** with company info
-- 👤 **Job Seeker Dashboard**
+-  **Job Search & Filters** (by title, location, type)
+-  **Job Listings** with company info
+-  **Job Seeker Dashboard**
   - Save jobs
   - Apply to jobs
   - Track application status
   - Chat with employers
   - Schedule/view interviews
-- 🧑‍💼 **Employer Dashboard**
+-  **Employer Dashboard**
   - Post new jobs
   - View applicants
   - Accept/reject applications
   - Schedule interviews
   - Chat with candidates
-- 🌟 **Featured Jobs** carousel
-- 🔔 **Real-time notifications**
-- ✅ Clean UI with responsive layout
+-  **Featured Jobs** carousel
+-  **Real-time notifications**
+-  Clean UI with responsive layout
 
 ---
 
-## 🧪 Demo Credentials
+##  Demo Credentials
 
 > You can use these test accounts to explore the platform:
 
@@ -58,7 +58,7 @@ JobFlare is a full-featured job portal platform that connects job seekers with t
 
 ---
 
-## 💻 Local Setup
+##  Local Setup
 
 ### 1. Clone the Repository
 ```bash
