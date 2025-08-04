@@ -26,13 +26,13 @@ JobFlare is a full-featured job portal platform that connects job seekers with t
 
 -  **Job Search & Filters** (by title, location, type)
 -  **Job Listings** with company info
--  **Job Seeker Dashboard**
+- => **Job Seeker Dashboard**
   - Save jobs
   - Apply to jobs
   - Track application status
   - Chat with employers
   - Schedule/view interviews
--  **Employer Dashboard**
+- => **Employer Dashboard**
   - Post new jobs
   - View applicants
   - Accept/reject applications
